@@ -92,9 +92,10 @@ function animates(p) {
     if (p.isAnimating) return;
     p.isAnimating = true;
     let scaleSpeed = 0;
-    let fallSpeed = 0;
     let isScale = true;
+    let fallSpeed = 0;
     let isFall = true
+    const targetY = p.GridY * (GRID_SIZE + GRID_GAP)
     function animate(){
         scaleSpeed += (1 - p.scale) * 0.12;
         scaleSpeed *= 0.9;
@@ -108,8 +109,10 @@ function animates(p) {
         fallSpeed += 1;
         p.animeY += fallSpeed;
         isFall = true;
-        if (p.animeY > p.GridY * (GRID_SIZE + GRID_GAP)) {
-            p.animeY = p.GridY * (GRID_SIZE + GRID_GAP);
+        if (p.animeY >= targetY) {
+            p.animeY = targetY;
+            p.style.transform = 
+                `translateY(${p.animeY}px) scale(${p.scale})`;
             fallSpeed = 0;
             isFall = false;
         }
@@ -146,7 +149,6 @@ document.addEventListener("pointerdown", (e) => {
 
 document.addEventListener("pointerup", (e) => {
     isPointer = false;
-
     const molecule = isMolecule(selectPieces);
     selectPieces.forEach((piece) => {
         piece.style.filter = "brightness(1)";
@@ -161,8 +163,16 @@ document.addEventListener("pointerup", (e) => {
         e.remove();
     })
     if (molecule === null) return;
-
     titleLayer.textContent = molecule.text;
+    for (let col = 0; col< GRID_COLS; col++) {
+        let row = 0;
+        for (let y= 0; y < GRID_ROWS; y++) {
+            const piece = grid[y][col];
+            if (piece === null) continue;
+            piece.GridY = row;
+            row++;
+        }
+    }
     grid.forEach((i) => {
         i.forEach((j) => {
             if (j === null) return;
@@ -173,7 +183,6 @@ document.addEventListener("pointerup", (e) => {
     for (let i = 0; i < GRID_COLS; i++) {
             creatSelect(i, 0, 0);
     }
-
     const newGrid = Array.from({length: GRID_ROWS}, () => 
         Array(GRID_COLS).fill(null)
     );
@@ -181,7 +190,6 @@ document.addEventListener("pointerup", (e) => {
         newGrid[e.GridY][e.GridX] = e;
     })
     grid = newGrid;
-
 })
 
 document.addEventListener("pointermove", (e) => {
