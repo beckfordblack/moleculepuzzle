@@ -24,10 +24,13 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+
+    border: solid 2px white;
 }
 
 .screen {
     position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -40,17 +43,11 @@ body {
 }
 
 #startScreen {
-    inset: 0;
-    background: #18282b6c;
+    background: #18282b;
 }
 
 #gameOverScreen {
-    width: 800px;
-    height: 800px;
-
-    background: #18282b7c;
-    border: solid 5px #6c787a;
-    border-radius: 30px;
+    background: #18282b8c;
 }
 
 .screen h1 {
@@ -70,12 +67,51 @@ body {
     display: none;
 }
 
+#menu {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 1650px;
+
+    width: 940px;
+    height: 180px;
+    background: #293638;
+    border-radius: 40px;
+}
+
+.menuButton {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    padding: 0;
+    border: none;
+
+    cursor: pointer;
+}
+
+.menuButton:active {
+    filter: brightness(0.7);
+}
+
+#homeButton {
+    left: 200px;
+    background: url("images/icon_home.png");
+    background-size: 100% 100%;
+}
+
+#skipButton {
+    right: 200px;
+    background: url("images/icon_skip.png");
+    background-size: 100% 100%;
+}
+
 #title {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1600px;
+    top: 1450px;
 
     font-size: 120px;
     color: #e4e5e5;
@@ -90,7 +126,7 @@ body {
     top: 500px;
 
     font-size: 480px;
-    color: #474747;
+    color: #444d4e;
     font-family: sans-serif;
 }
 
