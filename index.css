@@ -23,6 +23,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 #title {
@@ -31,7 +32,6 @@ body {
     justify-content: center;
     align-items: center;
     top: 640px;
-    z-index: 5;
 
     font-size: 120px;
     color: #e4e5e5;
