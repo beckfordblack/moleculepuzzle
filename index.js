@@ -11,9 +11,13 @@ const gameOverScreen = document.getElementById("gameOverScreen");
 const startButton = document.getElementById("startButton");
 const retryButton = document.getElementById("retryButton");
 const finalScore = document.getElementById("finalScore");
+const homeButton = document.getElementById("homeButton");
+const skipButton = document.getElementById("skipButton");
 
 startButton.addEventListener("click", startGame);
 retryButton.addEventListener("click", startGame);
+homeButton.addEventListener("click", home)
+skipButton.addEventListener("click", skip)
 
 const GAME_WIDTH = 1080;
 const GAME_HEIGHT = 1920;
@@ -201,6 +205,18 @@ function gameOver() {
     gameOverScreen.classList.remove("hidden");
 }
 
+function home() {
+    isPlaying = false;
+    isGameOver = false;
+
+    startScreen.classList.remove("hidden");
+    gameOverScreen.classList.add("hidden");
+}
+
+function skip() {
+    newpiece();
+}
+
 document.addEventListener("pointerdown", (e) => {
     if (!isPlaying || isGameOver) return;
     const target = document.elementFromPoint(e.clientX, e.clientY);
@@ -250,38 +266,7 @@ document.addEventListener("pointerup", (e) => {
         e.remove();
     })
     
-    for (let col = 0; col< GRID_COLS; col++) {
-        let row = NEWCOUNT;
-        for (let y= 0; y < GRID_ROWS; y++) {
-            const piece = grid[y][col];
-            if (piece === null) continue;
-            if (row >= GRID_ROWS) {
-                gameOver();
-                return;
-            }
-            piece.gridY = row;
-            row++;
-        }
-    }
-
-    for (let col = 0; col < GRID_COLS; col++) {
-        for (let row = 0; row < NEWCOUNT; row++) {
-                createPiece(col, row, (2 - row) * 180);
-        }
-    }
-
-    const newGrid = Array.from(
-        {length: GRID_ROWS},
-        () => Array(GRID_COLS).fill(null)
-    );
-    document.querySelectorAll(".pieces").forEach((e) => {
-        newGrid[e.gridY][e.gridX] = e;
-    })
-    grid = newGrid;
-
-    document.querySelectorAll(".pieces").forEach((piece) => {
-        animatePiece(piece);
-    });
+    newpiece();
 })
 
 document.addEventListener("pointermove", (e) => {
@@ -338,6 +323,41 @@ function showMolecule(molecule) {
     titleTimer = setTimeout(() => {
         titleLayer.style.opacity = "0";
     }, 2000);
+}
+
+function newpiece() {
+    for (let col = 0; col< GRID_COLS; col++) {
+        let row = NEWCOUNT;
+        for (let y= 0; y < GRID_ROWS; y++) {
+            const piece = grid[y][col];
+            if (piece === null) continue;
+            if (row >= GRID_ROWS) {
+                gameOver();
+                return;
+            }
+            piece.gridY = row;
+            row++;
+        }
+    }
+
+    for (let col = 0; col < GRID_COLS; col++) {
+        for (let row = 0; row < NEWCOUNT; row++) {
+                createPiece(col, row, (2 - row) * 180);
+        }
+    }
+
+    const newGrid = Array.from(
+        {length: GRID_ROWS},
+        () => Array(GRID_COLS).fill(null)
+    );
+    document.querySelectorAll(".pieces").forEach((e) => {
+        newGrid[e.gridY][e.gridX] = e;
+    })
+    grid = newGrid;
+
+    document.querySelectorAll(".pieces").forEach((piece) => {
+        animatePiece(piece);
+    });
 }
 
 function drawLine() {
