@@ -32,94 +32,97 @@ boardLayer.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 boardLayer.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 
 const ELEMENTS = [
-    {text: "H", col: "#4987ae"},
-    {text: "C", col: "#2c8a5d"},
-    {text: "N", col: "#9f6035"},
-    {text: "O", col: "#9d333e"}
+    {text: "H", color: "#4987ae"},
+    {text: "C", color: "#2c8a5d"},
+    {text: "N", color: "#9f6035"},
+    {text: "O", color: "#9d333e"}
 ];
 
 const MOLECULES = [
-    {text: "水素", con: ["H", "H"]},
-    {text: "酸素", con: ["O", "O"]},
-    {text: "窒素", con: ["N", "N"]},
-    {text: "水", con: ["H", "H", "O"]},
-    {text: "オゾン", con: ["O", "O", "O"]},
-    {text: "アンモニア", con: ["N", "H", "H", "H"]},
-    {text: "一酸化炭素", con: ["C", "O"]},
-    {text: "二酸化炭素", con: ["C", "O", "O"]},
-    {text: "一酸化窒素", con: ["N", "O"]},
-    {text: "二酸化窒素", con: ["N", "O", "O"]},
-    {text: "一酸化二窒素", con: ["N", "N", "O"]},
-    {text: "過酸化水素", con: ["H", "H", "O", "O"]},
-    {text: "メタン", con: ["C", "H", "H", "H", "H"]},
+    {text: "水素", elements: ["H", "H"]},
+    {text: "酸素", elements: ["O", "O"]},
+    {text: "窒素", elements: ["N", "N"]},
+    {text: "水", elements: ["H", "H", "O"]},
+    {text: "オゾン", elements: ["O", "O", "O"]},
+    {text: "アンモニア", elements: ["N", "H", "H", "H"]},
+    {text: "一酸化炭素", elements: ["C", "O"]},
+    {text: "二酸化炭素", elements: ["C", "O", "O"]},
+    {text: "一酸化窒素", elements: ["N", "O"]},
+    {text: "二酸化窒素", elements: ["N", "O", "O"]},
+    {text: "一酸化二窒素", elements: ["N", "N", "O"]},
+    {text: "過酸化水素", elements: ["H", "H", "O", "O"]},
+    {text: "メタン", elements: ["C", "H", "H", "H", "H"]},
 
-    {text: "酢酸", con: ["C", "H", "H", "H", "C", "O", "O", "H"]}
+    {text: "酢酸", elements: ["C", "H", "H", "H", "C", "O", "O", "H"]}
 ]
 
-function creatSelect(col, row, d) {
+function createPiece(gridX, gridY, delay) {
     const piece = document.createElement("div");
     piece.className = "pieces";
     piece.element = Math.floor(Math.random() * ELEMENTS.length);
     boardLayer.appendChild(piece);
-    grid[row][col] = piece;
+    grid[gridY][gridX] = piece;
 
-    piece.textContent = ELEMENTS[piece.element].text;
+    const element = ELEMENTS[piece.element];
+    piece.textContent = element.text;
     piece.style.background = `
         radial-gradient(
             circle,
-            ${ELEMENTS[piece.element].col + "22"} 0%,
-            ${ELEMENTS[piece.element].col + "99"} 100%
+            ${element.color + "22"} 0%,
+            ${element.color + "99"} 100%
         )
     `;
-    piece.style.border = 
-        `3px solid ${ELEMENTS[piece.element].col}`;
+    piece.style.border = `3px solid ${element.color}`;
     piece.style.width = `${GRID_SIZE}px`;
     piece.style.height = `${GRID_SIZE}px`;
-    piece.GridX = col;
-    piece.GridY = row;
+    piece.gridX = gridX;
+    piece.gridY = gridY;
     piece.style.left = 
-        `${piece.GridX * (GRID_SIZE + GRID_GAP)}px`;
+        `${gridX * (GRID_SIZE + GRID_GAP)}px`;
     piece.style.top = `0px`;
-    piece.animeY = - 180 - d;
+    piece.animatedY = - 180 - delay;
     piece.scale = 1;
     piece.style.transform = 
-                `translateY(${piece.animeY}px)`;
+                `translateY(${piece.animatedY}px)`;
     piece.isAnimating = false;
-    animates(piece);
+    animatePiece(piece);
 }
 
-function animates(p) {
-    if (p.isAnimating) return;
-    p.isAnimating = true;
+function animatePiece(piece) {
+    if (piece.isAnimating) return;
+    piece.isAnimating = true;
     let scaleSpeed = 0;
-    let isScale = true;
-    let fallSpeed = 0;
-    let isFall = true
-    const targetY = p.GridY * (GRID_SIZE + GRID_GAP)
+    let moveSpeed = 0;
     function animate(){
-        scaleSpeed += (1 - p.scale) * 0.12;
+        const targetY =
+            piece.gridY * (GRID_SIZE + GRID_GAP)
+        scaleSpeed += (1 - piece.scale) * 0.12;
         scaleSpeed *= 0.9;
-        p.scale += scaleSpeed;
-        isScale = true;
-        if (Math.abs(p.scale - 1) < 0.01 && Math.abs(scaleSpeed) < 0.01) {
-            p.scale = 1;
-            scaleSpeed = 0;
-            isScale = false;
+        piece.scale += scaleSpeed;
+        const distance = targetY - piece.animatedY;
+        moveSpeed += 2 * (distance > 0) - 1;
+        piece.animatedY += moveSpeed;
+
+        if (Math.abs(distance) < Math.abs(moveSpeed)) {
+            piece.animatedY = targetY;
+            moveSpeed = 0;
         }
-        fallSpeed += 2 * (targetY - p.animeY > 0) - 1;
-        p.animeY += fallSpeed;
-        isFall = true;
-        if (Math.abs(targetY - p.animeY) < Math.abs(fallSpeed)) {
-            p.animeY = targetY;
-            p.style.transform = 
-                `translateY(${p.animeY}px) scale(${p.scale})`;
-            fallSpeed = 0;
-            isFall = false;
-        }
-        p.style.transform = 
-                `translateY(${p.animeY}px) scale(${p.scale})`;
-        if (!isScale && !isFall) {
-            p.isAnimating = false;
+        
+        piece.style.transform = 
+                `translateY(${piece.animatedY}px) scale(${piece.scale})`;
+        
+        const scaleDone = 
+            Math.abs(piece.scale - 1) < 0.01 && 
+            Math.abs(scaleSpeed) < 0.01;
+
+        const moveDone = 
+            Math.abs(targetY - piece.animatedY) < 0.01 &&
+            moveSpeed === 0;
+
+        if (scaleDone && moveDone) {
+            piece.scale = 1;
+            piece.animatedY = targetY;
+            piece.isAnimating = false;
             return;
         }
         requestAnimationFrame(animate);
@@ -135,7 +138,7 @@ let isPointer = false;
 
 for (let col = 0; col < GRID_COLS; col++) {
     for (let row = 0; row < 3; row++) {
-        creatSelect(col, row, col * 50 + (2 - row) * 180);
+        createPiece(col, row, col * 50 + (2 - row) * 180);
     }
 }
 
@@ -153,9 +156,9 @@ document.addEventListener("pointerup", (e) => {
     selectPieces.forEach((piece) => {
         piece.style.filter = "brightness(1)";
         piece.style.border = 
-        `3px solid ${ELEMENTS[piece.element].col}`;
+        `3px solid ${ELEMENTS[piece.element].color}`;
         if (molecule != null) {
-            grid[piece.GridY][piece.GridX] = null;
+            grid[piece.gridY][piece.gridX] = null;
             piece.remove()
         }
     });
@@ -170,21 +173,23 @@ document.addEventListener("pointerup", (e) => {
         for (let y= 0; y < GRID_ROWS; y++) {
             const piece = grid[y][col];
             if (piece === null) continue;
-            piece.GridY = row;
-            animates(piece);
+            piece.gridY = row;
             row++;
         }
     }
     for (let i = 0; i < GRID_COLS; i++) {
-            creatSelect(i, 0, 0);
+            createPiece(i, 0, 0);
     }
     const newGrid = Array.from(
         {length: GRID_ROWS},
         () => Array(GRID_COLS).fill(null)
     );
     document.querySelectorAll(".pieces").forEach((e) => {
-        newGrid[e.GridY][e.GridX] = e;
+        newGrid[e.gridY][e.gridX] = e;
     })
+    document.querySelectorAll(".pieces").forEach((piece) => {
+        animatePiece(piece);
+    });
     grid = newGrid;
 })
 
@@ -198,7 +203,7 @@ document.addEventListener("pointermove", (e) => {
             const last = selectPieces[selectPieces.length - 1]
             last.style.filter = "brightness(1)";
             last.style.border = 
-                `3px solid ${ELEMENTS[last.element].col}`;
+                `3px solid ${ELEMENTS[last.element].color}`;
             selectPieces.splice(selectPieces.length - 1, 1)
             document.querySelectorAll(".lines").forEach(element => {
                 element.remove();
@@ -207,8 +212,8 @@ document.addEventListener("pointermove", (e) => {
         }
         return;
     }
-    const gapX = Math.abs(target.GridX - selectPieces[selectPieces.length - 1].GridX);
-    const gapY = Math.abs(target.GridY - selectPieces[selectPieces.length - 1].GridY);
+    const gapX = Math.abs(target.gridX - selectPieces[selectPieces.length - 1].gridX);
+    const gapY = Math.abs(target.gridY - selectPieces[selectPieces.length - 1].gridY);
     if (gapX + gapY !== 1) return;
     document.querySelectorAll(".lines").forEach(element => {
         element.remove();
@@ -218,20 +223,22 @@ document.addEventListener("pointermove", (e) => {
 
 })
 
-function addPiece(t) {
-    t.style.filter = "brightness(1.6)";
-    t.style.border = 
-        `5px solid ${ELEMENTS[t.element].col}`;
+function addPiece(piece) {
+    const element = ELEMENTS[piece.element];
 
-    t.scale = 1.3;
-    animates(t);
+    piece.style.filter = "brightness(1.6)";
+    piece.style.border = 
+        `5px solid ${element.color}`;
 
-    selectPieces.push(t);
+    piece.scale = 1.3;
+    animatePiece(piece);
+
+    selectPieces.push(piece);
 }
 
 function genLine() {
     for (let i = 1; i < selectPieces.length; i++) {
-        createLine(selectPieces[i].GridX, selectPieces[i].GridY, selectPieces[i - 1].GridX, selectPieces[i - 1].GridY)
+        createLine(selectPieces[i].gridX, selectPieces[i].gridY, selectPieces[i - 1].gridX, selectPieces[i - 1].gridY)
     }
 }
 
@@ -257,16 +264,19 @@ function createLine(x, y, x2, y2) {
         `${y * (GRID_SIZE + GRID_GAP) + GRID_SIZE / 2 + dy * (GRID_SIZE + GRID_GAP) / 2}px`;
 }
 
-function isMolecule(s) {
-    const sSort = s
-        .map((e) => ELEMENTS[e.element].text)
+function isMolecule(pieces) {
+    const selectedElements = pieces
+        .map((piece) => ELEMENTS[piece.element].text)
         .sort();
     return MOLECULES.find((molecule) => {
-        const mSort = [...molecule.con].sort();
+        const moleculeElements = [...molecule.elements].sort();
         
         return (
-            sSort.length === mSort.length &&
-            sSort.every((value, index) => value === mSort[index])
+            selectedElements.length === moleculeElements.length &&
+            selectedElements.every(
+                (element, index) =>
+                    element === moleculeElements[index]
+            )
         );
     }) ?? null;
 }
