@@ -106,10 +106,10 @@ function animates(p) {
             scaleSpeed = 0;
             isScale = false;
         }
-        fallSpeed += 1;
+        fallSpeed += 2 * (targetY - p.animeY > 0) - 1;
         p.animeY += fallSpeed;
         isFall = true;
-        if (p.animeY >= targetY) {
+        if (Math.abs(targetY - p.animeY) < Math.abs(fallSpeed)) {
             p.animeY = targetY;
             p.style.transform = 
                 `translateY(${p.animeY}px) scale(${p.scale})`;
@@ -155,6 +155,7 @@ document.addEventListener("pointerup", (e) => {
         piece.style.border = 
         `3px solid ${ELEMENTS[piece.element].col}`;
         if (molecule != null) {
+            grid[piece.GridY][piece.GridX] = null;
             piece.remove()
         }
     });
@@ -165,26 +166,21 @@ document.addEventListener("pointerup", (e) => {
     if (molecule === null) return;
     titleLayer.textContent = molecule.text;
     for (let col = 0; col< GRID_COLS; col++) {
-        let row = 0;
+        let row = 1;
         for (let y= 0; y < GRID_ROWS; y++) {
             const piece = grid[y][col];
             if (piece === null) continue;
             piece.GridY = row;
+            animates(piece);
             row++;
         }
     }
-    grid.forEach((i) => {
-        i.forEach((j) => {
-            if (j === null) return;
-            j.GridY++;
-            animates(j);
-        })
-    })
     for (let i = 0; i < GRID_COLS; i++) {
             creatSelect(i, 0, 0);
     }
-    const newGrid = Array.from({length: GRID_ROWS}, () => 
-        Array(GRID_COLS).fill(null)
+    const newGrid = Array.from(
+        {length: GRID_ROWS},
+        () => Array(GRID_COLS).fill(null)
     );
     document.querySelectorAll(".pieces").forEach((e) => {
         newGrid[e.GridY][e.GridX] = e;
