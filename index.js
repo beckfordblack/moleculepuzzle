@@ -145,17 +145,19 @@ document.addEventListener("pointerdown", (e) => {
 })
 
 document.addEventListener("pointerup", (e) => {
+    const molecule = isMolecule(selectPieces);
     selectPieces.forEach((e) => {
         e.style.filter = "brightness(1)";
         e.style.border = 
         `3px solid ${ELEMENTS[e.element].col}`;
-        e.remove();
+        if (molecule != null) e.remove();
     })
     selectPieces.length = 0;
     document.querySelectorAll(".lines").forEach((e) => {
         e.remove();
     })
-    
+    if (molecule === null) return;
+    titleLayer.textContent = molecule.text;
     grid.forEach((i) => {
         i.forEach((j) => {
             if (j === null) return;
@@ -247,12 +249,17 @@ function createLine(x, y, x2, y2) {
         `${y * (GRID_SIZE + GRID_GAP) + GRID_SIZE / 2 + dy * (GRID_SIZE + GRID_GAP) / 2}px`;
 }
 
-function ismolecule(s) {
+function isMolecule(s) {
     const selectText = [];
     s.forEach((e) => {
         selectText.push(ELEMENTS[e.element].text);
     })
     const sSort = [...selectText].sort();
-    const mSort = [...MOLECULES[target].con].sort();
-    return sSort.length === mSort.length && sSort.every((value, index) => value === mSort[index]);
+    let a = null;
+    MOLECULES.forEach((e) => {
+        const mSort = [...e.con].sort();
+        if (sSort.length === mSort.length && sSort.every((value, index) => value === mSort[index])) {
+            a = e};
+    })
+    return a;
 }
