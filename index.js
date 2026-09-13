@@ -3,8 +3,17 @@ document.addEventListener('dblclick', function(e) {
 }, { passive: false });
 
 const gameLayer = document.getElementById("game");
-const boardLayer = document.getElementById("board");
 const titleLayer = document.getElementById("title");
+const scoreLayer = document.getElementById("score");
+const boardLayer = document.getElementById("board");
+const startScreen = document.getElementById("startScreen");
+const gameOverScreen = document.getElementById("gameOverScreen");
+const startButton = document.getElementById("startButton");
+const retryButton = document.getElementById("retryButton");
+const finalScore = document.getElementById("finalScore");
+
+startButton.addEventListener("click", startGame);
+retryButton.addEventListener("click", startGame);
 
 const GAME_WIDTH = 1080;
 const GAME_HEIGHT = 1920;
@@ -69,7 +78,7 @@ function createPiece(gridX, gridY, delay) {
         radial-gradient(
             circle,
             ${element.color + "22"} 0%,
-            ${element.color + "99"} 100%
+            ${element.color + "dd"} 100%
         )
     `;
     piece.style.border = `3px solid ${element.color}`;
@@ -135,26 +144,65 @@ function animatePiece(piece) {
     requestAnimationFrame(animate);
 }
 
-let grid = Array.from({length: GRID_ROWS}, () => 
-    Array(GRID_COLS).fill(null)
-);
-const selectPieces = [];
 let isPointer = false;
+const selectPieces = [];
+let NEWCOUNT = 3;
+let score = 0;
+let grid = Array.from(
+    {length: GRID_ROWS},
+    () => Array(GRID_COLS).fill(null)
+);
 
-for (let col = 0; col < GRID_COLS; col++) {
-    for (let row = 0; row < 3; row++) {
-        createPiece(col, row, col * 50 + (2 - row) * 180);
+function createInitialPieces() {
+    for (let col = 0; col < GRID_COLS; col++) {
+        for (let row = 0; row < 4; row++) {
+            createPiece(col, row, col * 40 + (2 - row) * 180);
+        }
     }
 }
 
+function clearBoard() {
+    document.querySelectorAll(".pieces, .lines").forEach((e) => {
+        e.remove();
+    })
+    grid = Array.from(
+        {length: GRID_ROWS},
+        () => Array(GRID_COLS).fill(null)
+    );
+    selectPieces.length = 0;
+}
+
+let isPlaying = false;
 let isGameOver = false;
+
+function startGame() {
+    clearBoard();
+
+    isPlaying = true;
+    isGameOver = false;
+
+    startScreen.classList.add("hidden");
+    gameOverScreen.classList.add("hidden");
+
+    titleLayer.textContent = "";
+    score = 0;
+    scoreLayer.textContent = score;
+
+    createInitialPieces();
+}
+
 function gameOver() {
+    if (isGameOver) return;
+
     isGameOver = true;
-    titleLayer.textContent = "GAME OVER"
+    isPlaying = false;
+
+    finalScore.textContent = `SCORE: ${score}`;
+    gameOverScreen.classList.remove("hidden");
 }
 
 document.addEventListener("pointerdown", (e) => {
-    if (isGameOver) return;
+    if (!isPlaying || isGameOver) return;
     const target = document.elementFromPoint(e.clientX, e.clientY);
     if (target?.classList.contains("pieces")) {
         isPointer = true;
@@ -180,7 +228,9 @@ document.addEventListener("pointerup", (e) => {
         return;
     }
     
-    showMolecule(molecule);  
+    showMolecule(molecule); 
+    score += selectPieces.length;
+    scoreLayer.textContent = score;
 
     const deleteRows = new Set(
         selectPieces.map((piece) => piece.gridY)
@@ -201,7 +251,7 @@ document.addEventListener("pointerup", (e) => {
     })
     
     for (let col = 0; col< GRID_COLS; col++) {
-        let row = 2;
+        let row = NEWCOUNT;
         for (let y= 0; y < GRID_ROWS; y++) {
             const piece = grid[y][col];
             if (piece === null) continue;
@@ -215,7 +265,7 @@ document.addEventListener("pointerup", (e) => {
     }
 
     for (let col = 0; col < GRID_COLS; col++) {
-        for (let row = 0; row < 2; row++) {
+        for (let row = 0; row < NEWCOUNT; row++) {
                 createPiece(col, row, (2 - row) * 180);
         }
     }
@@ -235,7 +285,7 @@ document.addEventListener("pointerup", (e) => {
 })
 
 document.addEventListener("pointermove", (e) => {
-    if (isGameOver || !isPointer) return;
+    if (!isPlaying || isGameOver || !isPointer) return;
 
     const target = document.elementFromPoint(e.clientX, e.clientY);
     if (!target?.classList.contains("pieces")) return;
