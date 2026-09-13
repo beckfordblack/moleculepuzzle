@@ -26,15 +26,58 @@ body {
     overflow: hidden;
 }
 
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    background: #18282b;
+    color: white;
+    z-index: 100;
+}
+
+.screen h1 {
+    font-size: 100px;
+}
+
+.screen p {
+    font-size: 60px;
+}
+
+.screen button {
+    font-size: 80px;
+    padding: 20px 60px;
+}
+
+.hidden {
+    display: none;
+}
+
 #title {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 640px;
+    top: 1600px;
 
     font-size: 120px;
     color: #e4e5e5;
+    font-family: sans-serif;
+}
+
+#score {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 500px;
+
+    font-size: 480px;
+    color: #474747;
     font-family: sans-serif;
 }
 
@@ -52,7 +95,7 @@ body {
 
     cursor: pointer;
 
-    border-radius: 50%;
+    border-radius: 30%;
     font-size: 100px;
     color: #e4e5e5;
     font-family: sans-serif;
