@@ -165,24 +165,43 @@ document.addEventListener("pointerdown", (e) => {
 document.addEventListener("pointerup", (e) => {
     isPointer = false;
     const molecule = isMolecule(selectPieces);
-    selectPieces.forEach((piece) => {
-        piece.style.filter = "brightness(1)";
-        piece.style.border = 
-        `3px solid ${ELEMENTS[piece.element].color}`;
-        if (molecule != null) {
-            grid[piece.gridY][piece.gridX] = null;
-            piece.remove()
+    if (molecule === null) {
+        selectPieces.forEach((piece) => {
+            piece.style.filter = "brightness(1)";
+            piece.style.border = 
+            `3px solid ${ELEMENTS[piece.element].color}`;
+        });
+
+        selectPieces.length = 0;
+        document.querySelectorAll(".lines").forEach((e) => {
+            e.remove();
+        })
+
+        return;
+    }
+    
+    showMolecule(molecule);  
+
+    const deleteRows = new Set(
+        selectPieces.map((piece) => piece.gridY)
+    );
+
+    for (const row of deleteRows) {
+        for (let col = 0; col < GRID_COLS; col++) {
+            const piece = grid[row][col];
+            if (piece === null) continue;
+            piece.remove();
+            grid[row][col] = null;
         }
-    });
+    }
+
     selectPieces.length = 0;
     document.querySelectorAll(".lines").forEach((e) => {
         e.remove();
     })
-
-    if (molecule === null) return;
-    showMolecule(molecule);  
+    
     for (let col = 0; col< GRID_COLS; col++) {
-        let row = 1;
+        let row = 2;
         for (let y= 0; y < GRID_ROWS; y++) {
             const piece = grid[y][col];
             if (piece === null) continue;
@@ -195,8 +214,10 @@ document.addEventListener("pointerup", (e) => {
         }
     }
 
-    for (let i = 0; i < GRID_COLS; i++) {
-            createPiece(i, 0, 0);
+    for (let col = 0; col < GRID_COLS; col++) {
+        for (let row = 0; row < 2; row++) {
+                createPiece(col, row, (2 - row) * 180);
+        }
     }
 
     const newGrid = Array.from(
