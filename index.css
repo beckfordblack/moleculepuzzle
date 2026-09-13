@@ -14,7 +14,7 @@ body {
     user-select: none;
     -webkit-user-select: none;
 
-    background: #232323;
+    background: #18282b;
 }
 
 #game {
@@ -28,16 +28,29 @@ body {
 
 .screen {
     position: absolute;
-    inset: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 40px;
 
-    background: #18282b;
     color: white;
+    font-family: sans-serif;
     z-index: 100;
+}
+
+#startScreen {
+    inset: 0;
+    background: #18282b6c;
+}
+
+#gameOverScreen {
+    width: 800px;
+    height: 800px;
+
+    background: #18282b7c;
+    border: solid 5px #6c787a;
+    border-radius: 30px;
 }
 
 .screen h1 {
