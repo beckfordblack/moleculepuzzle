@@ -96,17 +96,22 @@ function animatePiece(piece) {
     function animate(){
         const targetY =
             piece.gridY * (GRID_SIZE + GRID_GAP)
+
         scaleSpeed += (1 - piece.scale) * 0.12;
         scaleSpeed *= 0.9;
         piece.scale += scaleSpeed;
-        const distance = targetY - piece.animatedY;
-        moveSpeed += 2 * (distance > 0) - 1;
-        piece.animatedY += moveSpeed;
 
-        if (Math.abs(distance) < Math.abs(moveSpeed)) {
-            piece.animatedY = targetY;
-            moveSpeed = 0;
+        const distance = targetY - piece.animatedY;
+
+        if (distance !== 0) {
+            moveSpeed += 2 * Math.sign(distance);
+            piece.animatedY += moveSpeed;
+            if (Math.abs(distance) < Math.abs(moveSpeed)) {
+                piece.animatedY = targetY;
+                moveSpeed = 0;
+            }
         }
+
         
         piece.style.transform = 
                 `translateY(${piece.animatedY}px) scale(${piece.scale})`;
@@ -142,7 +147,14 @@ for (let col = 0; col < GRID_COLS; col++) {
     }
 }
 
+let isGameOver = false;
+function gameOver() {
+    isGameOver = true;
+    titleLayer.textContent = "GAME OVER"
+}
+
 document.addEventListener("pointerdown", (e) => {
+    if (isGameOver) return;
     const target = document.elementFromPoint(e.clientX, e.clientY);
     if (target?.classList.contains("pieces")) {
         isPointer = true;
@@ -166,20 +178,27 @@ document.addEventListener("pointerup", (e) => {
     document.querySelectorAll(".lines").forEach((e) => {
         e.remove();
     })
+
     if (molecule === null) return;
-    titleLayer.textContent = molecule.text;
+    showMolecule(molecule);  
     for (let col = 0; col< GRID_COLS; col++) {
         let row = 1;
         for (let y= 0; y < GRID_ROWS; y++) {
             const piece = grid[y][col];
             if (piece === null) continue;
+            if (row >= GRID_ROWS) {
+                gameOver();
+                return;
+            }
             piece.gridY = row;
             row++;
         }
     }
+
     for (let i = 0; i < GRID_COLS; i++) {
             createPiece(i, 0, 0);
     }
+
     const newGrid = Array.from(
         {length: GRID_ROWS},
         () => Array(GRID_COLS).fill(null)
@@ -187,14 +206,16 @@ document.addEventListener("pointerup", (e) => {
     document.querySelectorAll(".pieces").forEach((e) => {
         newGrid[e.gridY][e.gridX] = e;
     })
+    grid = newGrid;
+
     document.querySelectorAll(".pieces").forEach((piece) => {
         animatePiece(piece);
     });
-    grid = newGrid;
 })
 
 document.addEventListener("pointermove", (e) => {
-    if (!isPointer) return;
+    if (isGameOver || !isPointer) return;
+
     const target = document.elementFromPoint(e.clientX, e.clientY);
     if (!target?.classList.contains("pieces")) return;
     if (selectPieces.includes(target)) {
@@ -208,7 +229,7 @@ document.addEventListener("pointermove", (e) => {
             document.querySelectorAll(".lines").forEach(element => {
                 element.remove();
             })
-            genLine();
+            drawLine();
         }
         return;
     }
@@ -219,7 +240,7 @@ document.addEventListener("pointermove", (e) => {
         element.remove();
     })
     addPiece(target);
-    genLine();
+    drawLine();
 
 })
 
@@ -236,7 +257,19 @@ function addPiece(piece) {
     selectPieces.push(piece);
 }
 
-function genLine() {
+let titleTimer;
+function showMolecule(molecule) {
+    clearTimeout(titleTimer);
+
+    titleLayer.textContent = molecule.text;
+    titleLayer.style.opacity = "1";
+
+    titleTimer = setTimeout(() => {
+        titleLayer.style.opacity = "0";
+    }, 2000);
+}
+
+function drawLine() {
     for (let i = 1; i < selectPieces.length; i++) {
         createLine(selectPieces[i].gridX, selectPieces[i].gridY, selectPieces[i - 1].gridX, selectPieces[i - 1].gridY)
     }
@@ -268,9 +301,9 @@ function isMolecule(pieces) {
     const selectedElements = pieces
         .map((piece) => ELEMENTS[piece.element].text)
         .sort();
+
     return MOLECULES.find((molecule) => {
-        const moleculeElements = [...molecule.elements].sort();
-        
+        const moleculeElements = [...molecule.elements].sort(); 
         return (
             selectedElements.length === moleculeElements.length &&
             selectedElements.every(
