@@ -23,13 +23,13 @@ function resizeGame() {
 window.addEventListener("resize", resizeGame);
 const GAME_SCALE = resizeGame();
 
-const GRID_ROWS = 5;
-const GRID_COLS = 8;
+const GRID_COLS = 5;
+const GRID_ROWS = 8;
 const GRID_SIZE = 160;
 const GRID_GAP = 20;
 
-boardLayer.style.width = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
-boardLayer.style.height = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
+boardLayer.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
+boardLayer.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 
 const ELEMENTS = [
     {text: "H", col: "#4987ae"},
@@ -56,12 +56,12 @@ const MOLECULES = [
     {text: "酢酸", con: ["C", "H", "H", "H", "C", "O", "O", "H"]}
 ]
 
-function creatSelect(i, j, d) {
+function creatSelect(col, row, d) {
     const piece = document.createElement("div");
     piece.className = "pieces";
     piece.element = Math.floor(Math.random() * ELEMENTS.length);
     boardLayer.appendChild(piece);
-    grid[i][j] = piece;
+    grid[row][col] = piece;
 
     piece.textContent = ELEMENTS[piece.element].text;
     piece.style.background = `
@@ -75,8 +75,8 @@ function creatSelect(i, j, d) {
         `3px solid ${ELEMENTS[piece.element].col}`;
     piece.style.width = `${GRID_SIZE}px`;
     piece.style.height = `${GRID_SIZE}px`;
-    piece.GridX = i;
-    piece.GridY = j;
+    piece.GridX = col;
+    piece.GridY = row;
     piece.style.left = 
         `${piece.GridX * (GRID_SIZE + GRID_GAP)}px`;
     piece.style.top = `0px`;
@@ -130,33 +130,38 @@ let grid = Array.from({length: GRID_ROWS}, () =>
 const selectPieces = [];
 let isPointer = false;
 
-for (let i = 0; i < GRID_ROWS; i++) {
-    for (let j = 0; j < 3; j++) {
-        creatSelect(i, j, i * 50 + (2 - j) * 180);
+for (let col = 0; col < GRID_COLS; col++) {
+    for (let row = 0; row < 3; row++) {
+        creatSelect(col, row, col * 50 + (2 - row) * 180);
     }
 }
 
 document.addEventListener("pointerdown", (e) => {
     const target = document.elementFromPoint(e.clientX, e.clientY);
     if (target?.classList.contains("pieces")) {
-        addPiece(target);
         isPointer = true;
+        addPiece(target);
     }
 })
 
 document.addEventListener("pointerup", (e) => {
+    isPointer = false;
+
     const molecule = isMolecule(selectPieces);
-    selectPieces.forEach((e) => {
-        e.style.filter = "brightness(1)";
-        e.style.border = 
-        `3px solid ${ELEMENTS[e.element].col}`;
-        if (molecule != null) e.remove();
-    })
+    selectPieces.forEach((piece) => {
+        piece.style.filter = "brightness(1)";
+        piece.style.border = 
+        `3px solid ${ELEMENTS[piece.element].col}`;
+        if (molecule != null) {
+            piece.remove()
+        }
+    });
     selectPieces.length = 0;
     document.querySelectorAll(".lines").forEach((e) => {
         e.remove();
     })
     if (molecule === null) return;
+
     titleLayer.textContent = molecule.text;
     grid.forEach((i) => {
         i.forEach((j) => {
@@ -165,7 +170,7 @@ document.addEventListener("pointerup", (e) => {
             animates(j);
         })
     })
-    for (let i = 0; i < GRID_ROWS; i++) {
+    for (let i = 0; i < GRID_COLS; i++) {
             creatSelect(i, 0, 0);
     }
 
@@ -173,11 +178,10 @@ document.addEventListener("pointerup", (e) => {
         Array(GRID_COLS).fill(null)
     );
     document.querySelectorAll(".pieces").forEach((e) => {
-        newGrid[e.GridX][e.GridY] = e;
+        newGrid[e.GridY][e.GridX] = e;
     })
     grid = newGrid;
 
-    isPointer = false;
 })
 
 document.addEventListener("pointermove", (e) => {
@@ -250,16 +254,15 @@ function createLine(x, y, x2, y2) {
 }
 
 function isMolecule(s) {
-    const selectText = [];
-    s.forEach((e) => {
-        selectText.push(ELEMENTS[e.element].text);
-    })
-    const sSort = [...selectText].sort();
-    let a = null;
-    MOLECULES.forEach((e) => {
-        const mSort = [...e.con].sort();
-        if (sSort.length === mSort.length && sSort.every((value, index) => value === mSort[index])) {
-            a = e};
-    })
-    return a;
+    const sSort = s
+        .map((e) => ELEMENTS[e.element].text)
+        .sort();
+    return MOLECULES.find((molecule) => {
+        const mSort = [...molecule.con].sort();
+        
+        return (
+            sSort.length === mSort.length &&
+            sSort.every((value, index) => value === mSort[index])
+        );
+    }) ?? null;
 }
