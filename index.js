@@ -150,7 +150,7 @@ function animatePiece(piece) {
 
 let isPointer = false;
 const selectPieces = [];
-let NEWCOUNT = 3;
+let NEWCOUNT = 2;
 let score = 0;
 let grid = Array.from(
     {length: GRID_ROWS},
@@ -159,7 +159,7 @@ let grid = Array.from(
 
 function createInitialPieces() {
     for (let col = 0; col < GRID_COLS; col++) {
-        for (let row = 0; row < 4; row++) {
+        for (let row = 0; row < 5; row++) {
             createPiece(col, row, col * 40 + (2 - row) * 180);
         }
     }
@@ -245,7 +245,7 @@ document.addEventListener("pointerup", (e) => {
     }
     
     showMolecule(molecule); 
-    score += selectPieces.length;
+    score += selectPieces.length ** 2;
     scoreLayer.textContent = score;
 
     const deleteRows = new Set(
@@ -265,7 +265,7 @@ document.addEventListener("pointerup", (e) => {
     document.querySelectorAll(".lines").forEach((e) => {
         e.remove();
     })
-    
+  
     newpiece();
 })
 
@@ -326,6 +326,15 @@ function showMolecule(molecule) {
 }
 
 function newpiece() {
+    let count = 0;
+    for (let row = 0; row < GRID_ROWS; row++) {
+      if (grid[row][0] !== null) {
+        count++
+      }
+    }
+
+    NEWCOUNT = Math.max(2, 5 - count)
+
     for (let col = 0; col< GRID_COLS; col++) {
         let row = NEWCOUNT;
         for (let y= 0; y < GRID_ROWS; y++) {
