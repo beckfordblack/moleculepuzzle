@@ -150,7 +150,6 @@ function animatePiece(piece) {
 
 let isPointer = false;
 const selectPieces = [];
-let NEWCOUNT = 2;
 let score = 0;
 let grid = Array.from(
     {length: GRID_ROWS},
@@ -159,8 +158,8 @@ let grid = Array.from(
 
 function createInitialPieces() {
     for (let col = 0; col < GRID_COLS; col++) {
-        for (let row = 0; row < 5; row++) {
-            createPiece(col, row, col * 40 + (2 - row) * 180);
+        for (let row = 0; row < 3; row++) {
+            createPiece(col, (GRID_ROWS - 1) - row, col * 40 + row * 180);
         }
     }
 }
@@ -248,18 +247,10 @@ document.addEventListener("pointerup", (e) => {
     score += selectPieces.length ** 2;
     scoreLayer.textContent = score;
 
-    const deleteRows = new Set(
-        selectPieces.map((piece) => piece.gridY)
-    );
-
-    for (const row of deleteRows) {
-        for (let col = 0; col < GRID_COLS; col++) {
-            const piece = grid[row][col];
-            if (piece === null) continue;
-            piece.remove();
-            grid[row][col] = null;
-        }
-    }
+    selectPieces.forEach((piece) => {
+        grid[piece.gridY][piece.gridX] = null;
+        piece.remove();
+    })
 
     selectPieces.length = 0;
     document.querySelectorAll(".lines").forEach((e) => {
@@ -326,18 +317,13 @@ function showMolecule(molecule) {
 }
 
 function newpiece() {
-    let count = 0;
-    for (let row = 0; row < GRID_ROWS; row++) {
-      if (grid[row][0] !== null) {
-        count++
-      }
+    for (let col = 0; col < GRID_COLS; col++) {
+            createPiece(col, 0, 0);
     }
 
-    NEWCOUNT = Math.max(2, 5 - count)
-
     for (let col = 0; col< GRID_COLS; col++) {
-        let row = NEWCOUNT;
-        for (let y= 0; y < GRID_ROWS; y++) {
+        let row = GRID_ROWS - 1;
+        for (let y = GRID_ROWS - 1; y >= 0; y--) {
             const piece = grid[y][col];
             if (piece === null) continue;
             if (row >= GRID_ROWS) {
@@ -345,13 +331,7 @@ function newpiece() {
                 return;
             }
             piece.gridY = row;
-            row++;
-        }
-    }
-
-    for (let col = 0; col < GRID_COLS; col++) {
-        for (let row = 0; row < NEWCOUNT; row++) {
-                createPiece(col, row, (2 - row) * 180);
+            row--;
         }
     }
 
