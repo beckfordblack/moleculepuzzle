@@ -70,26 +70,27 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1650px;
+    top: 1720px;
 
     width: 940px;
-    height: 180px;
+    height: 160px;
     background: #293638;
     border-radius: 40px;
 }
 
 .menuButton {
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     padding: 0;
+    filter: brightness(0.7);
     border: none;
 
     cursor: pointer;
 }
 
 .menuButton:active {
-    filter: brightness(0.7);
+    filter: brightness(0.5);
 }
 
 #homeButton {
@@ -109,7 +110,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1450px;
+    top: 1500px;
 
     font-size: 120px;
     color: #e4e5e5;
@@ -131,6 +132,11 @@ body {
 #board {
     position: absolute;
     top: 20px;
+
+    border-radius: 60px;
+    border: solid 10px #111e20;
+    background: #111e20;
+    overflow: hidden;
 }
 
 .pieces {
