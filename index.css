@@ -45,7 +45,19 @@ body {
 }
 
 #gameOverScreen {
-    background: #18282b8c;
+    background: #18282b62;
+}
+
+#gameOverLayer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 50px;
+    background: #18282beb;
+    border-radius: 50px;
+    border: solid 8px #18282b;
 }
 
 .screen h1 {
