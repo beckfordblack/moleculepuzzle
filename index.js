@@ -51,6 +51,8 @@ const ELEMENTS = [
     {text: "O", color: "#9d333e"}
 ];
 
+const elementPool = [0, 0, 0, 1, 2, 2, 3, 3, 3]
+
 const MOLECULES = [
     {text: "水素", elements: ["H", "H"]},
     {text: "酸素", elements: ["O", "O"]},
@@ -72,7 +74,7 @@ const MOLECULES = [
 function createPiece(gridX, gridY, delay) {
     const piece = document.createElement("div");
     piece.className = "pieces";
-    piece.element = Math.floor(Math.random() * ELEMENTS.length);
+    piece.element = elementPool[Math.floor(Math.random() * elementPool.length)];
     boardLayer.appendChild(piece);
     grid[gridY][gridX] = piece;
 
@@ -318,7 +320,8 @@ function showMolecule(molecule) {
 
 function newpiece() {
     for (let col = 0; col < GRID_COLS; col++) {
-            createPiece(col, 0, 0);
+        if (Math.random() < 0.3) continue;
+        createPiece(col, 0, 0);
     }
 
     for (let col = 0; col< GRID_COLS; col++) {
@@ -326,7 +329,7 @@ function newpiece() {
         for (let y = GRID_ROWS - 1; y >= 0; y--) {
             const piece = grid[y][col];
             if (piece === null) continue;
-            if (row >= GRID_ROWS) {
+            if (row <= 0) {
                 gameOver();
                 return;
             }
