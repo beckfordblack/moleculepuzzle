@@ -49,6 +49,9 @@ body {
 }
 
 .screen h1 {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
     font-size: 100px;
 }
 
@@ -123,9 +126,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1350px;
+    top: 1420px;
 
-    font-size: 300px;
+    font-size: 280px;
     color: #444d4e;
     font-family: sans-serif;
 }
