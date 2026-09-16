@@ -115,6 +115,7 @@ body {
     font-size: 120px;
     color: #e4e5e5;
     font-family: sans-serif;
+    z-index: 5;
 }
 
 #score {
@@ -122,9 +123,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 500px;
+    top: 1350px;
 
-    font-size: 480px;
+    font-size: 300px;
     color: #444d4e;
     font-family: sans-serif;
 }
