@@ -153,6 +153,7 @@ body {
     border: solid 10px #111e20;
     background: #111e20;
     overflow: hidden;
+    z-index: 0;
 }
 
 .pieces {
@@ -168,10 +169,12 @@ body {
     font-size: 100px;
     color: #e4e5e5;
     font-family: sans-serif;
+    z-index: 2;
 }
 
 .lines {
     position: absolute;
     transform: translate(-50%, -50%);
     background: #e4e5e5;
+    z-index: 1;
 }
