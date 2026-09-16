@@ -153,6 +153,7 @@ function animatePiece(piece) {
 function animationButton(time) {
     const scale = 1 + Math.sin(time * 0.005) * 0.05;
     startButton.style.scale = scale;
+    retryButton.style.scale = scale;
    requestAnimationFrame(animationButton);
 }
 requestAnimationFrame(animationButton);
