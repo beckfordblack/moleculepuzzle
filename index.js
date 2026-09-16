@@ -150,6 +150,13 @@ function animatePiece(piece) {
     requestAnimationFrame(animate);
 }
 
+function animationButton(time) {
+    const scale = 1 + Math.sin(time * 0.005) * 0.05;
+    startButton.style.scale = scale;
+   requestAnimationFrame(animationButton);
+}
+requestAnimationFrame(animationButton);
+
 let isPointer = false;
 const selectPieces = [];
 let score = 0;
