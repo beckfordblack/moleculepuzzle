@@ -331,7 +331,6 @@ function newpiece() {
             if (piece === null) continue;
             if (row <= 0) {
                 gameOver();
-                return;
             }
             piece.gridY = row;
             row--;
