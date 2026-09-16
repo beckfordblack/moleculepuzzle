@@ -55,9 +55,9 @@ body {
     align-items: center;
     gap: 40px;
     padding: 50px;
-    background: #18282beb;
+    background: #1c2d30eb;
     border-radius: 50px;
-    border: solid 8px #18282b;
+    border: solid 8px #526364;
 }
 
 .screen h1 {
@@ -138,9 +138,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1420px;
+    top: 1580px;
+    height: 0px;
 
-    font-size: 280px;
+    font-size: 250px;
     color: #444d4e;
     font-family: sans-serif;
 }
