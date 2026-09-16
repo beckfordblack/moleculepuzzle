@@ -51,25 +51,104 @@ const ELEMENTS = [
     {text: "O", color: "#9d333e"}
 ];
 
-const elementPool = [0, 0, 0, 1, 2, 2, 3, 3, 3]
+const elementPool = [0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
 const MOLECULES = [
-    {text: "水素", elements: ["H", "H"]},
-    {text: "酸素", elements: ["O", "O"]},
-    {text: "窒素", elements: ["N", "N"]},
-    {text: "水", elements: ["H", "H", "O"]},
-    {text: "オゾン", elements: ["O", "O", "O"]},
-    {text: "アンモニア", elements: ["N", "H", "H", "H"]},
-    {text: "一酸化炭素", elements: ["C", "O"]},
-    {text: "二酸化炭素", elements: ["C", "O", "O"]},
-    {text: "一酸化窒素", elements: ["N", "O"]},
-    {text: "二酸化窒素", elements: ["N", "O", "O"]},
-    {text: "一酸化二窒素", elements: ["N", "N", "O"]},
-    {text: "過酸化水素", elements: ["H", "H", "O", "O"]},
-    {text: "メタン", elements: ["C", "H", "H", "H", "H"]},
+    {name: "水素", formula: "H2"},
+    {name: "酸素", formula: "O2"},
+    {name: "オゾン", formula: "O3"},
+    {name: "窒素", formula: "N2"},
 
-    {text: "酢酸", elements: ["C", "H", "H", "H", "C", "O", "O", "H"]}
+    {name: "水", formula: "H2O"},
+    {name: "過酸化水素", formula: "H2O2"},
+    {name: "一酸化炭素", formula: "C1O1"},
+    {name: "二酸化炭素", formula: "C1O2"},
+    {name: "炭酸", formula: "H2C1O3"},
+
+    {name: "アンモニア", formula: "N1H3"},
+    {name: "ヒドラジン", formula: "N2H4"},
+    {name: "ヒドロキシルアミン", formula: "N1H3O1"},
+    {name: "一酸化窒素", formula: "N1O1"},
+    {name: "二酸化窒素", formula: "N1O2"},
+    {name: "一酸化二窒素", formula: "N2O1"},
+    {name: "亜硝酸", formula: "H1N1O2"},
+    {name: "硝酸", formula: "H1N1O3"},
+
+    {name: "メタン", formula: "C1H4"},
+    {name: "エタン", formula: "C2H6"},
+    {name: "プロパン", formula: "C3H8"},
+    {name: "ブタン", formula: "C4H10"},
+
+    {name: "エチレン", formula: "C2H4"},
+    {name: "プロピレン", formula: "C3H6"},
+    {name: "ブタジエン", formula: "C4H6"},
+    {name: "アセチレン", formula: "C2H2"},
+    {name: "プロパジエン", formula: "C3H4"},
+
+    {name: "シクロブタン", formula: "C4H8"},
+    {name: "ベンゼン", formula: "C6H6"},
+
+    {name: "メタノール", formula: "C1H4O1"},
+    {name: "エタノール", formula: "C2H6O1"},
+    {name: "プロパノール", formula: "C3H8O1"},
+    
+    {name: "ジエチルエーテル", formula: "C4H10O"},
+
+    {name: "ホルムアルデヒド", formula: "C1H2O1"},
+    {name: "アセトアルデヒド", formula: "C2H4O1"},
+    {name: "アセトン", formula: "C3H6O1"},
+    {name: "2-ブタノン", formula: "C4H8O1"},
+
+    {name: "ギ酸", formula: "C1H2O2"},
+    {name: "酢酸", formula: "C2H4O2"},
+    {name: "プロピオン酸", formula: "C3H6O2"},
+    {name: "乳酸", formula: "C3H6O3"},
+    {name: "ピルビン酸", formula: "C3H4O3"},
+    {name: "シュウ酸", formula: "C2H2O4"},
+    {name: "クエン酸", formula: "C6H8O7"},
+
+    {name: "シアン化水素", formula: "H1C1N1"},
+    {name: "シアノゲン", formula: "C2N2"},
+    {name: "シアンアミド", formula: "C1H2N2"},
+    {name: "アセトニトリル", formula: "C2H3N1"},
+    {name: "プロピオニトリル", formula: "C3H5N1"},
+    {name: "イソシアン酸", formula: "H1N1C1O1"},
+    
+    {name: "メチルアミン", formula: "C1H5N1"},
+    {name: "エチルアミン", formula: "C2H7N1"},
+    {name: "トリメチルアミン", formula: "C3H9N1"},
+    {name: "アミノメタノール", formula: "C1H5N1O1"},
+
+    {name: "ホルムアミド", formula: "C1H3N1O1"},
+    {name: "アセトアミド", formula: "C2H5N1O1"},
+    {name: "尿素", formula: "C1H4N2O1"},
+
+    {name: "グリシン", formula: "C2H5N1O2"},
+    {name: "アラニン", formula: "C3H7N1O2"},
+    {name: "アスパラギン酸", formula: "C4H7N1O4"},
+    {name: "グルタミン酸", formula: "C5H9N1O4"},
+    {name: "アスパラギン", formula: "C4H8N2O3"},
+
+    {name: "グルコース", formula: "C6H12O6"},
+    {name: "アデニン", formula: "C5H5N5"},
+    {name: "シトシン", formula: "C4H5N3O1"},
+    {name: "チミン", formula: "C5H6N2O2"},
+    {name: "ウラシル", formula: "C4H4N2O3"},
+    {name: "尿酸", formula: "C5H4N4O3"},
+    {name: "カフェイン", formula: "C8H10N4O2"},
 ]
+
+MOLECULES.forEach((e) => {
+    e.elements = expandFormula(e.formula)
+});
+
+
+function expandFormula(formula) {
+    return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
+        .flatMap(([_, element, count]) =>
+            Array(Number(count) || 1).fill(element)
+        );
+}
 
 function createPiece(gridX, gridY, delay) {
     const piece = document.createElement("div");
@@ -253,7 +332,7 @@ document.addEventListener("pointerup", (e) => {
         return;
     }
     
-    showMolecule(molecule); 
+    showMolecule(molecule.name); 
     score += selectPieces.length ** 2;
     scoreLayer.textContent = score;
 
@@ -315,10 +394,10 @@ function addPiece(piece) {
 }
 
 let titleTimer;
-function showMolecule(molecule) {
+function showMolecule(name) {
     clearTimeout(titleTimer);
 
-    titleLayer.textContent = molecule.text;
+    titleLayer.textContent = name;
     titleLayer.style.opacity = "1";
 
     titleTimer = setTimeout(() => {
