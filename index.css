@@ -125,10 +125,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1500px;
+    top: 1570px;
 
-    font-size: 120px;
-    color: #e4e5e5;
+    font-size: 100px;
+    color: #bbb;
     font-family: sans-serif;
     z-index: 5;
 }
@@ -138,17 +138,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1580px;
+    top: 75px;
     height: 0px;
 
-    font-size: 250px;
-    color: #444d4e;
+    font-size: 100px;
+    color: #bbb;
     font-family: sans-serif;
 }
 
 #board {
     position: absolute;
-    top: 20px;
+    top: 150px;
 
     border-radius:10px;
     border: solid 10px #bbb;
