@@ -150,9 +150,8 @@ body {
     position: absolute;
     top: 20px;
 
-    border-radius: 60px;
-    border: solid 10px #111e20;
-    background: #111e20;
+    border-radius:10px;
+    border: solid 10px #bbb;
     overflow: hidden;
     z-index: 0;
 }
@@ -170,12 +169,12 @@ body {
     font-size: 100px;
     color: #e4e5e5;
     font-family: sans-serif;
-    z-index: 2;
+    z-index: 1;
 }
 
 .lines {
     position: absolute;
     transform: translate(-50%, -50%);
-    background: #e4e5e5;
-    z-index: 1;
+    background: white;
+    z-index: 5;
 }
