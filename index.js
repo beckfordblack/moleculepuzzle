@@ -39,7 +39,7 @@ const GAME_SCALE = resizeGame();
 const GRID_COLS = 5;
 const GRID_ROWS = 8;
 const GRID_SIZE = 160;
-const GRID_GAP = 20;
+const GRID_GAP = 15;
 
 boardLayer.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 boardLayer.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
@@ -159,13 +159,7 @@ function createPiece(gridX, gridY, delay) {
 
     const element = ELEMENTS[piece.element];
     piece.textContent = element.text;
-    piece.style.background = `
-        radial-gradient(
-            circle,
-            ${element.color + "22"} 0%,
-            ${element.color + "dd"} 100%
-        )
-    `;
+    piece.style.background = element.color;
     piece.style.border = `3px solid ${element.color}`;
     piece.style.width = `${GRID_SIZE}px`;
     piece.style.height = `${GRID_SIZE}px`;
@@ -450,7 +444,6 @@ function createLine(x, y, x2, y2) {
 
     const line = document.createElement("div");
     line.className = "lines";
-    line.style.zIndex = -1;
     boardLayer.appendChild(line);
 
     if (dx === 0) {
