@@ -160,7 +160,6 @@ function createPiece(gridX, gridY, delay) {
     const element = ELEMENTS[piece.element];
     piece.textContent = element.text;
     piece.style.background = element.color;
-    piece.style.border = `3px solid ${element.color}`;
     piece.style.width = `${GRID_SIZE}px`;
     piece.style.height = `${GRID_SIZE}px`;
     piece.gridX = gridX;
