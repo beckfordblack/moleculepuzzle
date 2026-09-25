@@ -55,9 +55,9 @@ body {
     align-items: center;
     gap: 40px;
     padding: 50px;
-    background: #1c2d30eb;
+    background: #172331;
     border-radius: 50px;
-    border: solid 8px #526364;
+    border: solid 8px #2d3838
 }
 
 .screen h1 {
@@ -72,6 +72,7 @@ body {
 }
 
 .screen button {
+    color: #007464;
     font-size: 80px;
     padding: 20px 60px;
 }
@@ -87,6 +88,7 @@ body {
     align-items: center;
     top: 1720px;
 
+    background: #007464;
     width: 940px;
     height: 160px;
     border-radius: 40px;
@@ -149,9 +151,9 @@ body {
     position: absolute;
     top: 150px;
 
-    background: #0f2e2e;
+    background: #0a302e;
     border-radius:10px;
-    border: solid 10px #0f2e2e;
+    border: solid 10px #0a302e;
     overflow: hidden;
     z-index: 0;
 }
