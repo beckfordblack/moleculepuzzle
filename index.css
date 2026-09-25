@@ -139,7 +139,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 75px;
+    top: 80px;
     height: 0px;
 
     font-size: 100px;
@@ -149,11 +149,11 @@ body {
 
 #board {
     position: absolute;
-    top: 150px;
+    top: 160px;
 
-    background: #0a302e;
-    border-radius:10px;
-    border: solid 10px #0a302e;
+    background: #0e2b29;
+    border-radius: 18px;
+    border: solid 2px #0a302e;
     overflow: hidden;
     z-index: 0;
 }
@@ -167,9 +167,9 @@ body {
 
     cursor: pointer;
 
-    border-radius: 30%;
+    border-radius: 10%;
     font-size: 100px;
-    color: #e4e5e5;
+    color: #d1d1d1;
     font-family: sans-serif;
     z-index: 1;
 }
