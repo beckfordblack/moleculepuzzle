@@ -39,7 +39,7 @@ const GAME_SCALE = resizeGame();
 const GRID_COLS = 5;
 const GRID_ROWS = 8;
 const GRID_SIZE = 160;
-const GRID_GAP = 15;
+const GRID_GAP = 2;
 
 boardLayer.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 boardLayer.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
@@ -142,7 +142,6 @@ MOLECULES.forEach((e) => {
     e.elements = expandFormula(e.formula)
 });
 
-
 function expandFormula(formula) {
     return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
         .flatMap(([_, element, count]) =>
@@ -184,8 +183,8 @@ function animatePiece(piece) {
         const targetY =
             piece.gridY * (GRID_SIZE + GRID_GAP)
 
-        scaleSpeed += (1 - piece.scale) * 0.12;
-        scaleSpeed *= 0.9;
+        scaleSpeed += (1 - piece.scale) * 0.2;
+        scaleSpeed *= 0.7;
         piece.scale += scaleSpeed;
 
         const distance = targetY - piece.animatedY;
@@ -376,11 +375,11 @@ document.addEventListener("pointermove", (e) => {
 function addPiece(piece) {
     const element = ELEMENTS[piece.element];
 
-    piece.style.filter = "brightness(1.6)";
+    piece.style.filter = "brightness(1.4)";
     piece.style.border = 
         `5px solid ${element.color}`;
 
-    piece.scale = 1.3;
+    piece.scale = 1.1;
     animatePiece(piece);
 
     selectPieces.push(piece);
@@ -393,9 +392,9 @@ function showMolecule(name) {
     titleLayer.textContent = name;
     titleLayer.style.opacity = "1";
 
-    titleTimer = setTimeout(() => {
-        titleLayer.style.opacity = "0";
-    }, 2000);
+    // titleTimer = setTimeout(() => {
+    //     titleLayer.style.opacity = "0";
+    // }, 2000);
 }
 
 function newpiece() {
