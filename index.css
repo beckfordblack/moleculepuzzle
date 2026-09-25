@@ -97,14 +97,14 @@ body {
     width: 100px;
     height: 100px;
     padding: 0;
-    filter: brightness(0.7);
+    filter: brightness(1.0);
     border: none;
 
     cursor: pointer;
 }
 
 .menuButton:active {
-    filter: brightness(0.5);
+    filter: brightness(0.7);
 }
 
 #homeButton {
