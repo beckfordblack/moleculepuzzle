@@ -184,7 +184,7 @@ function animatePiece(piece) {
             piece.gridY * (GRID_SIZE + GRID_GAP)
 
         scaleSpeed += (1 - piece.scale) * 0.2;
-        scaleSpeed *= 0.7;
+        scaleSpeed *= 0.8;
         piece.scale += scaleSpeed;
 
         const distance = targetY - piece.animatedY;
@@ -197,7 +197,6 @@ function animatePiece(piece) {
                 moveSpeed = 0;
             }
         }
-
         
         piece.style.transform = 
                 `translateY(${piece.animatedY}px) scale(${piece.scale})`;
@@ -379,7 +378,7 @@ function addPiece(piece) {
     piece.style.border = 
         `5px solid ${element.color}`;
 
-    piece.scale = 1.1;
+    piece.scale = 1.2;
     animatePiece(piece);
 
     selectPieces.push(piece);
