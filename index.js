@@ -166,10 +166,10 @@ function resizeGame() {
 
 const GAME_SCALE = resizeGame();
 
-function startGame() {
+async function startGame() {
     clearBoard();
 
-    isPlaying = true;
+    isPlaying = false;
     isGameOver = false;
 
     startScreen.classList.add("hidden");
@@ -179,7 +179,8 @@ function startGame() {
     score = 0;
     scoreLayer.textContent = score;
 
-    createInitialPieces();
+    await createInitialPieces();
+    isPlaying = true;
 }
 
 function gameOver() {
@@ -227,12 +228,17 @@ function updateGrid() {
     return newGrid;
 }
 
-function createInitialPieces() {
+async function createInitialPieces() {
     for (let col = 0; col < GRID_COLS; col++) {
         for (let row = 0; row < 3; row++) {
             createPiece(col, (GRID_ROWS - 1) - row, row * 180);
         }
     }
+    const animations = [];
+    document.querySelectorAll(".pieces").forEach((piece) => {
+        animations.push(animatePiece(piece));
+    });
+    await Promise.all(animations);
 }
 
 function collapsePieces() {
@@ -286,7 +292,6 @@ function createPiece(gridX, gridY, delay) {
     piece.style.transform = 
                 `translateY(${piece.animatedY}px)`;
     piece.isAnimating = false;
-    animatePiece(piece);
 }
 
 function animatePiece(piece) {
