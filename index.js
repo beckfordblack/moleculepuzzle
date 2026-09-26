@@ -138,15 +138,98 @@ const MOLECULES = [
     {name: "カフェイン", formula: "C8H10N4O2"},
 ]
 
-MOLECULES.forEach((e) => {
-    e.elements = expandFormula(e.formula)
-});
+let isPointer = false;
+let isPlaying = false;
+let isGameOver = false;
+let score = 0;
+const selectPieces = [];
+let titleTimer;
+let grid = Array.from(
+    {length: GRID_ROWS},
+    () => Array(GRID_COLS).fill(null)
+);
 
 function expandFormula(formula) {
     return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
         .flatMap(([_, element, count]) =>
             Array(Number(count) || 1).fill(element)
         );
+}
+
+function addEvent() {
+    document.addEventListener("pointerdown", (e) => {
+        if (!isPlaying || isGameOver) return;
+        const target = document.elementFromPoint(e.clientX, e.clientY);
+        if (target?.classList.contains("pieces")) {
+            isPointer = true;
+            addPiece(target);
+        }
+    })
+
+    document.addEventListener("pointerup", (e) => {
+        isPointer = false;
+        const molecule = isMolecule(selectPieces);
+        if (molecule === null) {
+            selectPieces.forEach((piece) => {
+                piece.style.filter = "brightness(1)";
+                piece.style.border = 
+                `3px solid ${ELEMENTS[piece.element].color}`;
+            });
+
+            selectPieces.length = 0;
+            document.querySelectorAll(".lines").forEach((e) => {
+                e.remove();
+            })
+
+            return;
+        }
+        
+        showMolecule(molecule.name); 
+        score += selectPieces.length ** 2;
+        scoreLayer.textContent = score;
+
+        selectPieces.forEach((piece) => {
+            grid[piece.gridY][piece.gridX] = null;
+            piece.remove();
+        })
+
+        selectPieces.length = 0;
+        document.querySelectorAll(".lines").forEach((e) => {
+            e.remove();
+        })
+    
+        newpiece();
+    })
+
+    document.addEventListener("pointermove", (e) => {
+        if (!isPlaying || isGameOver || !isPointer) return;
+
+        const target = document.elementFromPoint(e.clientX, e.clientY);
+        if (!target?.classList.contains("pieces")) return;
+        if (selectPieces.includes(target)) {
+            const index = selectPieces.findIndex(i => i === target);
+            if (index === selectPieces.length - 2) {
+                const last = selectPieces[selectPieces.length - 1]
+                last.style.filter = "brightness(1)";
+                last.style.border = 
+                    `3px solid ${ELEMENTS[last.element].color}`;
+                selectPieces.splice(selectPieces.length - 1, 1)
+                document.querySelectorAll(".lines").forEach(element => {
+                    element.remove();
+                })
+                drawLine();
+            }
+            return;
+        }
+        const gapX = Math.abs(target.gridX - selectPieces[selectPieces.length - 1].gridX);
+        const gapY = Math.abs(target.gridY - selectPieces[selectPieces.length - 1].gridY);
+        if (gapX + gapY !== 1) return;
+        document.querySelectorAll(".lines").forEach(element => {
+            element.remove();
+        })
+        addPiece(target);
+        drawLine();
+    })
 }
 
 function createPiece(gridX, gridY, delay) {
@@ -226,15 +309,6 @@ function animationButton(time) {
     retryButton.style.scale = scale;
    requestAnimationFrame(animationButton);
 }
-requestAnimationFrame(animationButton);
-
-let isPointer = false;
-const selectPieces = [];
-let score = 0;
-let grid = Array.from(
-    {length: GRID_ROWS},
-    () => Array(GRID_COLS).fill(null)
-);
 
 function createInitialPieces() {
     for (let col = 0; col < GRID_COLS; col++) {
@@ -254,9 +328,6 @@ function clearBoard() {
     );
     selectPieces.length = 0;
 }
-
-let isPlaying = false;
-let isGameOver = false;
 
 function startGame() {
     clearBoard();
@@ -296,81 +367,6 @@ function skip() {
     newpiece();
 }
 
-document.addEventListener("pointerdown", (e) => {
-    if (!isPlaying || isGameOver) return;
-    const target = document.elementFromPoint(e.clientX, e.clientY);
-    if (target?.classList.contains("pieces")) {
-        isPointer = true;
-        addPiece(target);
-    }
-})
-
-document.addEventListener("pointerup", (e) => {
-    isPointer = false;
-    const molecule = isMolecule(selectPieces);
-    if (molecule === null) {
-        selectPieces.forEach((piece) => {
-            piece.style.filter = "brightness(1)";
-            piece.style.border = 
-            `3px solid ${ELEMENTS[piece.element].color}`;
-        });
-
-        selectPieces.length = 0;
-        document.querySelectorAll(".lines").forEach((e) => {
-            e.remove();
-        })
-
-        return;
-    }
-    
-    showMolecule(molecule.name); 
-    score += selectPieces.length ** 2;
-    scoreLayer.textContent = score;
-
-    selectPieces.forEach((piece) => {
-        grid[piece.gridY][piece.gridX] = null;
-        piece.remove();
-    })
-
-    selectPieces.length = 0;
-    document.querySelectorAll(".lines").forEach((e) => {
-        e.remove();
-    })
-  
-    newpiece();
-})
-
-document.addEventListener("pointermove", (e) => {
-    if (!isPlaying || isGameOver || !isPointer) return;
-
-    const target = document.elementFromPoint(e.clientX, e.clientY);
-    if (!target?.classList.contains("pieces")) return;
-    if (selectPieces.includes(target)) {
-        const index = selectPieces.findIndex(i => i === target);
-        if (index === selectPieces.length - 2) {
-            const last = selectPieces[selectPieces.length - 1]
-            last.style.filter = "brightness(1)";
-            last.style.border = 
-                `3px solid ${ELEMENTS[last.element].color}`;
-            selectPieces.splice(selectPieces.length - 1, 1)
-            document.querySelectorAll(".lines").forEach(element => {
-                element.remove();
-            })
-            drawLine();
-        }
-        return;
-    }
-    const gapX = Math.abs(target.gridX - selectPieces[selectPieces.length - 1].gridX);
-    const gapY = Math.abs(target.gridY - selectPieces[selectPieces.length - 1].gridY);
-    if (gapX + gapY !== 1) return;
-    document.querySelectorAll(".lines").forEach(element => {
-        element.remove();
-    })
-    addPiece(target);
-    drawLine();
-
-})
-
 function addPiece(piece) {
     const element = ELEMENTS[piece.element];
 
@@ -384,7 +380,6 @@ function addPiece(piece) {
     selectPieces.push(piece);
 }
 
-let titleTimer;
 function showMolecule(name) {
     clearTimeout(titleTimer);
 
@@ -472,3 +467,9 @@ function isMolecule(pieces) {
         );
     }) ?? null;
 }
+
+MOLECULES.forEach((e) => {
+    e.elements = expandFormula(e.formula)
+});
+addEvent();
+requestAnimationFrame(animationButton);
