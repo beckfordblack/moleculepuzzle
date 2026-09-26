@@ -143,7 +143,7 @@ document.addEventListener('dblclick', function(e) {
     e.preventDefault();
 }, { passive: false });
 
-addEventListners();
+addEventListeners();
 
 function expandFormula(formula) {
     return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
@@ -201,13 +201,14 @@ function goHome() {
 }
 
 function skip() {
-    addNewpiece();
+    addNewpieces();
 }
 
 function clearBoard() {
-    document.querySelectorAll(".pieces, .lines").forEach((e) => {
+    document.querySelectorAll(".pieces").forEach((e) => {
         e.remove();
     })
+    clearLines();
     grid = Array.from(
         {length: GRID_ROWS},
         () => Array(GRID_COLS).fill(null)
@@ -215,7 +216,7 @@ function clearBoard() {
     selectedPieces.length = 0;
 }
 
-function updataGrid() {
+function updateGrid() {
     const newGrid = Array.from(
         {length: GRID_ROWS},
         () => Array(GRID_COLS).fill(null)
@@ -229,7 +230,7 @@ function updataGrid() {
 function createInitialPieces() {
     for (let col = 0; col < GRID_COLS; col++) {
         for (let row = 0; row < 3; row++) {
-            createPiece(col, (GRID_ROWS - 1) - row, col * 40 + row * 180);
+            createPiece(col, (GRID_ROWS - 1) - row, row * 180);
         }
     }
 }
@@ -249,13 +250,13 @@ function collapsePieces() {
     }
 }
 
-function addNewpiece() {
+function addNewpieces() {
     for (let col = 0; col < GRID_COLS; col++) {
         if (Math.random() < 0.3) continue;
         createPiece(col, 0, 0);
     }
     collapsePieces();
-    grid = updataGrid();
+    grid = updateGrid();
     document.querySelectorAll(".pieces").forEach((piece) => {
         animatePiece(piece);
     });
@@ -355,11 +356,31 @@ function clearSelection() {
     selectedPieces.length = 0;
 }
 
-function removeSelectesPieces() {
+function removeSelectedPieces() {
     selectedPieces.forEach((piece) => {
         grid[piece.gridY][piece.gridX] = null;
-        piece.remove();
-    })
+        piece.animate([
+            {
+                transform: `translateY(${piece.animatedY}px) scale(1)`,
+                opacity: 1
+            },
+            {
+                transform: `translateY(${piece.animatedY}px) scale(1.3)`,
+                opacity: 1,
+                offset: 0.3
+            },
+            {
+                transform: `translateY(${piece.animatedY}px) scale(0)`,
+                opacity: 0
+            }
+        ],{
+            duration: 300,
+            easing: "ease-out"
+        });
+        setTimeout(() => {
+            piece.remove();
+        }, 300);
+    });
     selectedPieces.length = 0;
 }
 
@@ -413,7 +434,7 @@ function clearLines() {
     })
 }
 
-function addEventListners() {
+function addEventListeners() {
     document.addEventListener("pointerdown", (e) => {
         if (!isPlaying || isGameOver) return;
         const target = document.elementFromPoint(e.clientX, e.clientY);
@@ -434,9 +455,11 @@ function addEventListners() {
         showMolecule(molecule.name); 
         score += selectedPieces.length ** 2;
         scoreLayer.textContent = score;
-        removeSelectesPieces();
+        removeSelectedPieces();
         clearLines();
-        addNewpiece();
+        setTimeout(() => {
+            addNewpieces();
+        }, 400);
     })
 
     document.addEventListener("pointermove", (e) => {
@@ -459,9 +482,7 @@ function addEventListners() {
         const gapX = Math.abs(target.gridX - selectedPieces[selectedPieces.length - 1].gridX);
         const gapY = Math.abs(target.gridY - selectedPieces[selectedPieces.length - 1].gridY);
         if (gapX + gapY !== 1) return;
-        document.querySelectorAll(".lines").forEach(element => {
-            element.remove();
-        })
+        clearLines();
         selectPiece(target);
         drawLine();
     })
