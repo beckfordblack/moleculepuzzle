@@ -468,6 +468,7 @@ function addEventListeners() {
         }
         
         formedMolecule = molecule;
+        displayMode = "name";
         showMolecule("name"); 
         score += selectedPieces.length ** 2;
         scoreLayer.textContent = score;
@@ -514,11 +515,18 @@ function addEventListeners() {
     })
 }
 
+function toSubscript(formula) {
+    const subscript = "₀₁₂₃₄₅₆₇₈₉";
+    return formula.replace(/\d/g, n =>
+        n === "1" ? "" : [...n].map(d => subscript[d]).join("")
+    );
+}
+
 function showMolecule(displayMode) {
     if (displayMode === "name") {
         titleLayer.textContent = formedMolecule.name;
     } else {
-        titleLayer.textContent = formedMolecule.formula;
+        titleLayer.textContent = toSubscript(formedMolecule.formula);
     }
     titleLayer.animate([
         {
