@@ -68,12 +68,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1720px;
+    bottom: 0;
 
     background: #5f6874;
-    width: 940px;
+    width: 1000px;
     height: 160px;
-    border-radius: 40px;
 }
 
 .menuButton {
@@ -108,7 +107,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1570px;
+    top: 1530px;
 
     font-size: 100px;
     color: #efefef;
