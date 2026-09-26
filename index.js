@@ -117,7 +117,6 @@ let isPlaying = false;
 let isGameOver = false;
 
 let score = 0;
-let titleTimer;
 
 const selectedPieces = [];
 
@@ -164,7 +163,7 @@ function resizeGame() {
     return scale;
 }
 
-const GAME_SCALE = resizeGame();
+resizeGame();
 
 async function startGame() {
     clearBoard();
@@ -201,8 +200,11 @@ function goHome() {
     gameOverScreen.classList.add("hidden");
 }
 
-function skip() {
-    addNewpieces();
+async function skip() {
+    if (!isPlaying || isGameOver) return;
+    isPlaying = false;
+    await addNewpieces();
+    isPlaying = true;
 }
 
 function clearBoard() {
@@ -501,14 +503,7 @@ function addEventListeners() {
 }
 
 function showMolecule(name) {
-    clearTimeout(titleTimer);
-
     titleLayer.textContent = name;
-    titleLayer.style.opacity = "1";
-
-    // titleTimer = setTimeout(() => {
-    //     titleLayer.style.opacity = "0";
-    // }, 2000);
 }
 
 function animateButtons(time) {
