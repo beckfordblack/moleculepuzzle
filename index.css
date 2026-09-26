@@ -14,7 +14,7 @@ body {
     user-select: none;
     -webkit-user-select: none;
 
-    background: #007b6b;
+    background: #91c0ba;
 }
 
 #game {
@@ -153,7 +153,7 @@ body {
 
     background: #0e2b29;
     border-radius: 18px;
-    border: solid 2px #0a302e;
+    border: solid 4px #0a302e;
     overflow: hidden;
     z-index: 0;
 }
