@@ -183,8 +183,6 @@ async function startGame() {
 }
 
 function gameOver() {
-    if (isGameOver) return;
-
     isGameOver = true;
     isPlaying = false;
 
@@ -250,7 +248,10 @@ function collapsePieces() {
             const piece = grid[y][col];
             if (piece === null) continue;
             if (row <= 0) {
-                gameOver();
+                isGameOver = true;
+                setTimeout(() => {
+                    gameOver();
+                }, 1500);
             }
             piece.gridY = row;
             row--;
