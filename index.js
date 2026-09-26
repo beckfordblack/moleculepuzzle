@@ -39,16 +39,16 @@ const GAME_SCALE = resizeGame();
 const GRID_COLS = 5;
 const GRID_ROWS = 8;
 const GRID_SIZE = 160;
-const GRID_GAP = 2;
+const GRID_GAP = 4;
 
 boardLayer.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 boardLayer.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 
 const ELEMENTS = [
-    {text: "H", color: "#4987ae"},
-    {text: "C", color: "#2c8a5d"},
-    {text: "N", color: "#9f6035"},
-    {text: "O", color: "#9d333e"}
+    {text: "H", color: "#448787"},
+    {text: "C", color: "#328a32"},
+    {text: "N", color: "#a15d1a"},
+    {text: "O", color: "#a73425"}
 ];
 
 const elementPool = [0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
@@ -190,7 +190,7 @@ function animatePiece(piece) {
         const distance = targetY - piece.animatedY;
 
         if (distance !== 0) {
-            moveSpeed += 2 * Math.sign(distance);
+            moveSpeed += 2;
             piece.animatedY += moveSpeed;
             if (Math.abs(distance) < Math.abs(moveSpeed)) {
                 piece.animatedY = targetY;
@@ -374,7 +374,7 @@ document.addEventListener("pointermove", (e) => {
 function addPiece(piece) {
     const element = ELEMENTS[piece.element];
 
-    piece.style.filter = "brightness(1.4)";
+    piece.style.filter = "brightness(1.6)";
     piece.style.border = 
         `5px solid ${element.color}`;
 
