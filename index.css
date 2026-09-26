@@ -35,29 +35,10 @@ body {
     align-items: center;
     gap: 40px;
 
+    background: #676f7a;
     color: white;
     font-family: sans-serif;
     z-index: 100;
-}
-
-#startScreen {
-    background: #676f7a;
-}
-
-#gameOverScreen {
-    background: #18282b62;
-}
-
-#gameOverLayer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    padding: 50px;
-    background: #172331;
-    border-radius: 50px;
-    border: solid 8px #2d3838
 }
 
 .screen h1 {
