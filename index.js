@@ -117,8 +117,8 @@ let isPlaying = false;
 let isGameOver = false;
 
 let score = 0;
-
 const selectedPieces = [];
+const formedMolecule = [];
 
 let grid = Array.from(
     {length: GRID_ROWS},
@@ -504,7 +504,18 @@ function addEventListeners() {
 }
 
 function showMolecule(name) {
+    formedMolecule.push(name);
     titleLayer.textContent = name;
+    titleLayer.animate([
+        {
+            transform: "scale(0)"
+        }, {
+            transform: "scale(1)"
+        }
+    ], {
+        duration: 200,
+        easing: "ease-out"        
+    });
 }
 
 function animateButtons(time) {
