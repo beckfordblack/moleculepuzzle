@@ -118,7 +118,8 @@ let isGameOver = false;
 
 let score = 0;
 const selectedPieces = [];
-const formedMolecule = [];
+let formedMolecule = "";
+let displayMode = "name";
 
 let grid = Array.from(
     {length: GRID_ROWS},
@@ -465,7 +466,9 @@ function addEventListeners() {
             clearLines();
             return;
         }
-        showMolecule(molecule.name); 
+        
+        formedMolecule = molecule;
+        showMolecule("name"); 
         score += selectedPieces.length ** 2;
         scoreLayer.textContent = score;
         isPlaying = false;
@@ -501,15 +504,31 @@ function addEventListeners() {
         selectPiece(target);
         drawLine();
     })
+    titleLayer.addEventListener("pointerdown", (e)=> {
+        if (displayMode === "name") {
+            displayMode = "elements";
+        } else {
+            displayMode = "name";
+        }
+        showMolecule(displayMode);
+    })
 }
 
-function showMolecule(name) {
-    formedMolecule.push(name);
-    titleLayer.textContent = name;
+function showMolecule(displayMode) {
+    if (displayMode === "name") {
+        titleLayer.textContent = formedMolecule.name;
+    } else {
+        titleLayer.textContent = formedMolecule.formula;
+    }
     titleLayer.animate([
         {
             transform: "scale(0)"
-        }, {
+        },
+        {
+            transform: "scale(1.3)",
+            offset: 0.3
+        },
+        {
             transform: "scale(1)"
         }
     ], {
