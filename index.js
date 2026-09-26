@@ -250,16 +250,18 @@ function collapsePieces() {
     }
 }
 
-function addNewpieces() {
+async function addNewpieces() {
     for (let col = 0; col < GRID_COLS; col++) {
         if (Math.random() < 0.3) continue;
         createPiece(col, 0, 0);
     }
     collapsePieces();
     grid = updateGrid();
+    const animations = [];
     document.querySelectorAll(".pieces").forEach((piece) => {
-        animatePiece(piece);
+        animations.push(animatePiece(piece));
     });
+    await Promise.all(animations);
 }
 
 function createPiece(gridX, gridY, delay) {
@@ -288,49 +290,52 @@ function createPiece(gridX, gridY, delay) {
 }
 
 function animatePiece(piece) {
-    if (piece.isAnimating) return;
+    if (piece.isAnimating) return Promise.resolve();
     piece.isAnimating = true;
-    let scaleSpeed = 0;
-    let moveSpeed = 0;
-    function animate(){
-        const targetY =
-            piece.gridY * (GRID_SIZE + GRID_GAP)
-
-        scaleSpeed += (1 - piece.scale) * 0.2;
-        scaleSpeed *= 0.8;
-        piece.scale += scaleSpeed;
-
-        const distance = targetY - piece.animatedY;
-
-        if (distance !== 0) {
-            moveSpeed += 2;
-            piece.animatedY += moveSpeed;
-            if (Math.abs(distance) < Math.abs(moveSpeed)) {
-                piece.animatedY = targetY;
-                moveSpeed = 0;
+    return new Promise((resolve) => {
+        let scaleSpeed = 0;
+        let moveSpeed = 0;
+        function animate(){
+            const targetY =
+                piece.gridY * (GRID_SIZE + GRID_GAP)
+    
+            scaleSpeed += (1 - piece.scale) * 0.2;
+            scaleSpeed *= 0.8;
+            piece.scale += scaleSpeed;
+    
+            const distance = targetY - piece.animatedY;
+    
+            if (distance !== 0) {
+                moveSpeed += 2;
+                piece.animatedY += moveSpeed;
+                if (Math.abs(distance) < Math.abs(moveSpeed)) {
+                    piece.animatedY = targetY;
+                    moveSpeed = 0;
+                }
             }
-        }
-        
-        piece.style.transform = 
-                `translateY(${piece.animatedY}px) scale(${piece.scale})`;
-        
-        const scaleDone = 
-            Math.abs(piece.scale - 1) < 0.01 && 
-            Math.abs(scaleSpeed) < 0.01;
-
-        const moveDone = 
-            Math.abs(targetY - piece.animatedY) < 0.01 &&
-            moveSpeed === 0;
-
-        if (scaleDone && moveDone) {
-            piece.scale = 1;
-            piece.animatedY = targetY;
-            piece.isAnimating = false;
-            return;
+            
+            piece.style.transform = 
+                    `translateY(${piece.animatedY}px) scale(${piece.scale})`;
+            
+            const scaleDone = 
+                Math.abs(piece.scale - 1) < 0.01 && 
+                Math.abs(scaleSpeed) < 0.01;
+    
+            const moveDone = 
+                Math.abs(targetY - piece.animatedY) < 0.01 &&
+                moveSpeed === 0;
+    
+            if (scaleDone && moveDone) {
+                piece.scale = 1;
+                piece.animatedY = targetY;
+                piece.isAnimating = false;
+                resolve();
+                return;
+            }
+            requestAnimationFrame(animate);
         }
         requestAnimationFrame(animate);
-    }
-    requestAnimationFrame(animate);
+    });
 }
 
 function selectPiece(piece) {
@@ -455,11 +460,13 @@ function addEventListeners() {
         showMolecule(molecule.name); 
         score += selectedPieces.length ** 2;
         scoreLayer.textContent = score;
-        removeSelectedPieces();
+        isPlaying = false;
         clearLines();
-        setTimeout(() => {
-            addNewpieces();
-        }, 400);
+        removeSelectedPieces();
+        setTimeout(async () => {
+            await addNewpieces();
+            isPlaying = true;
+        }, 350);
     })
 
     document.addEventListener("pointermove", (e) => {
