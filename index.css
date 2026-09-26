@@ -14,7 +14,7 @@ body {
     user-select: none;
     -webkit-user-select: none;
 
-    background: #84b9b2;
+    background: #676f7a;
 }
 
 #game {
@@ -41,7 +41,7 @@ body {
 }
 
 #startScreen {
-    background: #84b9b2;
+    background: #676f7a;
 }
 
 #gameOverScreen {
@@ -72,7 +72,7 @@ body {
 }
 
 .screen button {
-    color: #84b9b2;
+    color: #676f7a;
     font-size: 80px;
     padding: 20px 60px;
 }
@@ -88,7 +88,7 @@ body {
     align-items: center;
     top: 1720px;
 
-    background: #7ab3ab;
+    background: #5f6874;
     width: 940px;
     height: 160px;
     border-radius: 40px;
@@ -151,9 +151,9 @@ body {
     position: absolute;
     top: 160px;
 
-    background: #0e2b29;
+    background: #102321;
     border-radius: 18px;
-    border: solid 4px #0a302e;
+    border: solid 4px #102321;
     overflow: hidden;
     z-index: 0;
 }
