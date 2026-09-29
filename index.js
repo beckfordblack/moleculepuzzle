@@ -262,7 +262,7 @@ function collapsePieces() {
 
 async function addNewpieces() {
     for (let col = 0; col < GRID_COLS; col++) {
-        if (Math.random() < 0.3) continue;
+        if (Math.random() < 0.25) continue;
         createPiece(col, 0, 0);
     }
     collapsePieces();
