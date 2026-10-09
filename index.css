@@ -14,7 +14,7 @@ body {
     user-select: none;
     -webkit-user-select: none;
 
-    background: #676f7a;
+    background: #000;
 }
 
 #game {
@@ -35,9 +35,11 @@ body {
     align-items: center;
     gap: 40px;
 
-    background: #676f7a;
-    color: #f2f2f2;
-    font-family: sans-serif;
+    background: #000;
+    color: #fff;
+    font-family: "Isometra", serif;
+    font-weight: 400;
+    font-style: normal;
     z-index: 100;
 }
 
@@ -53,8 +55,9 @@ body {
 }
 
 .screen button {
-    color: #676f7a;
+    color: #000;
     font-size: 80px;
+    font-weight: 800;
     padding: 20px 60px;
     border-radius: 0;
 }
@@ -68,11 +71,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 0;
+    bottom: 30px;
 
-    background: #5f6874;
     width: 1000px;
     height: 160px;
+    border: 4px solid #fff;
+    border-radius: 20px;
 }
 
 .menuButton {
@@ -111,8 +115,10 @@ body {
 
     font-size: 100px;
     color: #f2f2f2;
-    font-family: sans-serif;
-    z-index: 5;
+    font-family: "Shippori Antique B1", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  z-index: 5;
 }
 
 #score {
@@ -125,16 +131,18 @@ body {
 
     font-size: 100px;
     color: #f2f2f2;
-    font-family: sans-serif;
+    font-family: "Shippori Antique B1", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 #board {
     position: absolute;
     top: 160px;
 
-    background: #102321;
+    background: #000;
     border-radius: 18px;
-    border: solid 4px #102321;
+    border: solid 4px #fff;
     overflow: hidden;
     z-index: 0;
 }
