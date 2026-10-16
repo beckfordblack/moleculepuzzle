@@ -24,6 +24,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    background: #010e26;
 }
 
 .screen {
@@ -33,33 +34,54 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
 
-    background: #000;
-    color: #fff;
-    font-family: "Isometra", serif;
-    font-weight: 400;
-    font-style: normal;
+    background: #010e26;
+    color: white;
+    font-family: sans-serif;
     z-index: 100;
 }
 
+.screen img {
+    position: absolute;
+    filter: drop-shadow(0 0 80px #0062b3);
+}
+
+.screen .ring {
+    position: absolute;
+    border: solid 3px white;
+    border-radius: 50%;
+    opacity: 30%;
+}
+
 .screen h1 {
+    position: absolute;
     display: flex;
     flex-direction: column;
     text-align: center;
-    font-size: 100px;
+  
+    font-weight: 400;
+    font-size: 120px;
+    letter-spacing: 20px;
+    filter: drop-shadow(0 0 40px #0062b3);
 }
 
 .screen p {
+    position: absolute;
     font-size: 60px;
+    filter: drop-shadow(0 0 10px #0088ff);
 }
 
 .screen button {
-    color: #000;
-    font-size: 80px;
-    font-weight: 800;
-    padding: 20px 60px;
-    border-radius: 0;
+    position: absolute;
+    width: 450px;
+    height: 120px;
+    background: none;
+    color: white;
+    font-size: 50px;
+    font-weight: 400;
+    letter-spacing: 15px;
+    border: solid 3px white;
+    border-radius: 60px;
 }
 
 .hidden {
@@ -132,15 +154,15 @@ body {
     font-size: 100px;
     color: #f2f2f2;
     font-family: "Shippori Antique B1", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #board {
     position: absolute;
     top: 160px;
 
-    background: #000;
+    background: #0e1726;
     border-radius: 18px;
     border: solid 4px #fff;
     overflow: hidden;
@@ -166,6 +188,6 @@ body {
 .lines {
     position: absolute;
     transform: translate(-50%, -50%);
-    background: #f2f2f2;
+    background: #fff;
     z-index: 5;
 }
