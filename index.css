@@ -44,6 +44,7 @@ body {
 .screen img {
     position: absolute;
     filter: drop-shadow(0 0 10px #0062b3);
+    z-index: 1;
 }
 
 .screen .ring {
@@ -51,6 +52,7 @@ body {
     border: solid 3px white;
     border-radius: 50%;
     opacity: 30%;
+    z-index: 0;
 }
 
 .screen h1 {
@@ -63,11 +65,15 @@ body {
     font-size: 120px;
     letter-spacing: 20px;
     filter: drop-shadow(0 0 40px #0062b3);
+    z-index: 1;
 }
 
 .screen p {
     position: absolute;
     font-size: 60px;
+    font-weight: 400;
+    letter-spacing: 7px;
+    z-index: 1;
 }
 
 .screen button {
@@ -81,7 +87,12 @@ body {
     letter-spacing: 15px;
     border: solid 3px white;
     border-radius: 60px;
-    z-index: 10;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.screen button:active {
+    background: #b4b9ff62;
 }
 
 .hidden {
