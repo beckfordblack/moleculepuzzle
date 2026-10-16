@@ -43,7 +43,7 @@ body {
 
 .screen img {
     position: absolute;
-    filter: drop-shadow(0 0 80px #0062b3);
+    filter: drop-shadow(0 0 10px #0062b3);
 }
 
 .screen .ring {
@@ -68,7 +68,6 @@ body {
 .screen p {
     position: absolute;
     font-size: 60px;
-    filter: drop-shadow(0 0 10px #0088ff);
 }
 
 .screen button {
