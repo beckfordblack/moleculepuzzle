@@ -74,13 +74,14 @@ body {
     position: absolute;
     width: 450px;
     height: 120px;
-    background: none;
+    background: #010e26;
     color: white;
     font-size: 50px;
     font-weight: 400;
     letter-spacing: 15px;
     border: solid 3px white;
     border-radius: 60px;
+    z-index: 10;
 }
 
 .hidden {
