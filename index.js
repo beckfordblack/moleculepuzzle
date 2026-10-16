@@ -262,7 +262,7 @@ function collapsePieces() {
 
 async function addNewpieces() {
     for (let col = 0; col < GRID_COLS; col++) {
-        if (Math.random() < 0.3) continue;
+        if (Math.random() < 0.2) continue;
         createPiece(col, 0, 0);
     }
     collapsePieces();
@@ -546,7 +546,7 @@ function showMolecule(displayMode) {
 }
 
 function animateButtons(time) {
-    const scale = 1 + Math.sin(time * 0.005) * 0.05;
+    const scale = 1 + Math.sin(time * 0.003) * 0.03;
     startButton.style.scale = scale;
     retryButton.style.scale = scale;
    requestAnimationFrame(animateButtons);
