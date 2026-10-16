@@ -545,11 +545,37 @@ function showMolecule(displayMode) {
     });
 }
 
+function createRing(rings) {
+    rings.forEach((e) => {
+        const ring = document.createElement("div");
+        ring.className = "ring";
+        ring.style.width = `${e[0]}px`;
+        ring.style.height = `${e[0]}px`;
+        ring.style.top = `${e[1]}px`;
+        ring.style.left = `${e[2]}px`;
+        ring.offset = e[3];
+        startScreen.appendChild(ring);  
+    })
+}
+
+createRing([
+    [700, -300, -300, 0.8],
+    [700, 1400, -200, 0.2],
+    [1000, 1400, 400, 0.5],
+    [600, 1600, 800, 0.1]
+]);
+
 function animateButtons(time) {
     const scale = 1 + Math.sin(time * 0.003) * 0.03;
     startButton.style.scale = scale;
     retryButton.style.scale = scale;
-   requestAnimationFrame(animateButtons);
+    const ring = document.querySelectorAll(".ring");
+    ring.forEach((e) => {
+        const scale = (time * 0.0001 + e.offset) % 1;
+        e.style.scale = 0.4 + scale;
+        e.style.opacity = 0.6 * Math.sin(scale * Math.PI);
+    })
+    requestAnimationFrame(animateButtons);
 }
 
 requestAnimationFrame(animateButtons);
