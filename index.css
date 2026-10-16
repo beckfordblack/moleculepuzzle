@@ -44,6 +44,7 @@ body {
 }
 
 .screen img {
+    -webkit-user-drag: none;
     position: absolute;
     filter: drop-shadow(0 0 10px #0062b3);
     z-index: 1;
@@ -73,8 +74,8 @@ body {
     text-align: center;
   
     font-weight: 400;
-    font-size: 120px;
-    letter-spacing: 20px;
+    font-size: 130px;
+    letter-spacing: 18px;
     filter: drop-shadow(0 0 40px #0062b3);
     z-index: 3;
 }
