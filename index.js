@@ -565,17 +565,48 @@ createRing([
     [600, 1600, 800, 0.1]
 ]);
 
-function animateButtons(time) {
+function createParticle(particles) {
+    particles.forEach ((e) => {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        if (e[0]) {
+            particle.style.backgroundImage = `url("https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green_particle.png")`;
+        } else {
+            particle.style.backgroundImage = `url("https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue_particle.png")`;
+        }
+            particle.start = e[1];
+        particle.end = e[2];
+        particle.offset = e[3];
+        startScreen.appendChild(particle);
+    })
+}
+
+createParticle([
+    [0, [-10, 700], [600, -10], 0],
+    [0, [-10, 1400], [1090, 1800], 0.5],
+    [0, [300, 1930], [-10, 1200], 0.9],
+    [1, [700, 1930], [-10, 1400], 0.6],
+    [1, [1090, 300], [800, 1930], 0.8],
+    [1, [1090, 1200], [-10, 1850], 0.1]
+])
+
+function animateTitles(time) {
     const scale = 1 + Math.sin(time * 0.003) * 0.03;
     startButton.style.scale = scale;
     retryButton.style.scale = scale;
     const ring = document.querySelectorAll(".ring");
     ring.forEach((e) => {
         const scale = (time * 0.0001 + e.offset) % 1;
-        e.style.scale = 0.4 + scale;
+        e.style.scale = 0.5 + scale;
         e.style.opacity = 0.6 * Math.sin(scale * Math.PI);
     })
-    requestAnimationFrame(animateButtons);
+    const particle = document.querySelectorAll(".particle");
+    particle.forEach((e) => {
+        const scale = (time * 0.00001 + e.offset) % 1;
+        e.style.left = `${e.start[0] + (e.end[0] - e.start[0]) * scale}px`;
+        e.style.top = `${e.start[1] + (e.end[1] - e.start[1]) * scale}px`;
+    })
+    requestAnimationFrame(animateTitles);
 }
 
-requestAnimationFrame(animateButtons);
+requestAnimationFrame(animateTitles);
