@@ -43,11 +43,10 @@ body {
     z-index: 100;
 }
 
-.screen img {
-    -webkit-user-drag: none;
+.screen .ball {
     position: absolute;
     filter: drop-shadow(0 0 10px #005397);
-    z-index: 1;
+    z-index: 2;
 }
 
 .screen .ring {
@@ -64,48 +63,50 @@ body {
     height: 30px;
     background-size: cover;
     transform: translate(-50%, -50%);
-    z-index: 0;
+    z-index: 1;
+}
+
+.screen .title {
+    position: absolute;
+    filter: drop-shadow(0 0 40px #93cfff);
+    z-index: 10;
 }
 
 .screen h1 {
-    position: absolute;
     display: flex;
     flex-direction: column;
     text-align: center;
-  
+    
     font-weight: 400;
     font-size: 130px;
     letter-spacing: 18px;
-    filter: drop-shadow(0 0 40px #005397);
-    z-index: 3;
 }
 
 .screen p {
-    position: absolute;
-    font-size: 80px;
+    font-size: 60px;
     font-weight: 400;
     letter-spacing: 7px;
-    z-index: 2;
+}
+
+.screen img {
+    -webkit-user-drag: none;
 }
 
 .screen button {
-    position: absolute;
     width: 450px;
     height: 120px;
-    background: #b4b4ff10;
+    background: #ddddff1a;
     color: white;
     font-size: 50px;
     font-weight: 400;
     letter-spacing: 15px;
     border: solid 3px white;
     border-radius: 60px;
-    filter: drop-shadow(0 0 30px white);
     cursor: pointer;
-    z-index: 1;
 }
 
 .screen button:active {
-    background: #b4b4ff62;
+    background: #ddddff49;
 }
 
 .hidden {
