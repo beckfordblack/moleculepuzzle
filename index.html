@@ -19,13 +19,12 @@
 </head>
 <body>
     <div id="game">
-        <div id="title"></div>
-        <div id="score">0</div>
+        <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_glow.png" style="width: 100%; z-index: 0;">
+        <div id="title" class="title"></div>
+        <div id="score" class="title">0</div>
         <div id="board"></div>
-        <div id="menu">
-            <button id="homeButton" class="menuButton"></button>
-            <button id="skipButton" class="menuButton"></button>
-        </div>
+        <button id="homeButton" class="menuButton title" style="left: 180px;">HOME</button>
+        <button id="skipButton" class="menuButton title" style="right: 180px;">→</button>
         <div id="startScreen" class="screen">
             <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" class="ball" style="width: 500px; top: -250px; left: -150px;">
             <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green.png" class="ball" style="width: 120px; bottom: 80px; right: 200px;">
@@ -33,7 +32,7 @@
             <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" class="ball" style="width: 300px; bottom: -200px; left: 250px;">
             <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green.png" class="ball" style="width: 180px; bottom: 120px; left: 40px;">
             <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_red.png" class="ball" style="width: 150px; top: 30px; right: 50px;">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_glow.png" style="width: 100%;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_glow.png" style="width: 100%; z-index: 3;">
             <h1 class="title" style="top: 440px;">MOLECULE</h1>
             <h1 class="title" style="top: 570px; background: linear-gradient(to right, #8beefe, #92eeb9); background-clip: text; color: transparent;">PUZZLE</h1>
             <div class="title" style="width: 400px; height: 3px; top: 830px; background: white;"></div>
