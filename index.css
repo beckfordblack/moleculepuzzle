@@ -66,7 +66,17 @@ body {
     z-index: 1;
 }
 
-.screen .title {
+.screen .benzene {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    transform: translate(-50%, -50%);
+    opacity: 0.15;
+    z-index: 1;
+}
+
+.title {
     position: absolute;
     filter: drop-shadow(0 0 40px #93cfff);
     z-index: 10;
@@ -107,6 +117,7 @@ body {
 
 .screen button:active {
     background: #ddddff49;
+    scale: 0.9;
 }
 
 .hidden {
