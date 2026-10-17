@@ -9,6 +9,7 @@ const GRID_GAP = 4;
 const gameLayer = document.getElementById("game");
 const titleLayer = document.getElementById("title");
 const scoreLayer = document.getElementById("score");
+const highScoreLayer = document.getElementById("highScore");
 const boardLayer = document.getElementById("board");
 const startScreen = document.getElementById("startScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
@@ -117,6 +118,8 @@ let isPlaying = false;
 let isGameOver = false;
 
 let score = 0;
+let highScore = Number(localStorage.getItem("highScore")) || 0;
+highScoreLayer.textContent = `${highScore}`;
 const selectedPieces = [];
 let formedMolecule = "";
 let displayMode = "name";
@@ -195,6 +198,7 @@ function goHome() {
     isPlaying = false;
     isGameOver = false;
 
+    highScoreLayer.textContent = `${highScore}`;
     startScreen.classList.remove("hidden");
     gameOverScreen.classList.add("hidden");
 }
@@ -472,6 +476,10 @@ function addEventListeners() {
         showMolecule("name"); 
         score += selectedPieces.length ** 2;
         scoreLayer.textContent = score;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("highScore", highScore);
+        }
         isPlaying = false;
         clearLines();
         removeSelectedPieces();
