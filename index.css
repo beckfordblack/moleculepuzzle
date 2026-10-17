@@ -45,7 +45,7 @@ body {
 
 .screen .ball {
     position: absolute;
-    filter: drop-shadow(0 0 10px #005397);
+    filter: drop-shadow(0 0 20px #004985);
     z-index: 2;
 }
 
@@ -73,12 +73,12 @@ body {
     background-size: cover;
     transform: translate(-50%, -50%);
     opacity: 0.12;
-    z-index: 1;
+    z-index: 0;
 }
 
 .title {
     position: absolute;
-    filter: drop-shadow(0 0 40px #93cfff);
+    filter: drop-shadow(0 0 30px #0059a1);
     z-index: 10;
 }
 
@@ -102,10 +102,10 @@ body {
     -webkit-user-drag: none;
 }
 
-.screen button {
+button {
     width: 450px;
     height: 120px;
-    background: #ddddff1a;
+    background: #ddddff14;
     color: white;
     font-size: 50px;
     font-weight: 400;
@@ -115,8 +115,8 @@ body {
     cursor: pointer;
 }
 
-.screen button:active {
-    background: #ddddff49;
+button:active {
+    background: #ddddff3b;
     scale: 0.9;
 }
 
@@ -124,48 +124,12 @@ body {
     display: none;
 }
 
-#menu {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    bottom: 30px;
-
-    width: 900px;
-    height: 160px;
-    border: 3px solid #fff;
-    border-radius: 20px;
-}
-
 .menuButton {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    padding: 0;
-    filter: brightness(1.0);
-    border: none;
-
-    cursor: pointer;
-}
-
-.menuButton:active {
-    filter: brightness(0.7);
-}
-
-#homeButton {
-    left: 200px;
-    background: url("images/icon_home.png");
-    background-size: 100% 100%;
-}
-
-#skipButton {
-    right: 200px;
-    background: url("images/icon_skip.png");
-    background-size: 100% 100%;
+    width: 300px;
+    bottom: 60px;
 }
 
 #title {
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -174,13 +138,11 @@ body {
     font-size: 100px;
     color: #f2f2f2;
     font-family: "Shippori Antique B1", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  z-index: 5;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #score {
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -198,11 +160,11 @@ body {
     position: absolute;
     top: 160px;
 
-    background: #0e1726;
+    background: #010e26;
     border-radius: 18px;
     border: solid 4px #fff;
     overflow: hidden;
-    z-index: 0;
+    z-index: 1;
 }
 
 .pieces {
@@ -218,7 +180,7 @@ body {
     font-size: 100px;
     color: #f2f2f2;
     font-family: sans-serif;
-    z-index: 1;
+    z-index: 3;
 }
 
 .lines {
