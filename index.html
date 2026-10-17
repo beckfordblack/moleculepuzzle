@@ -35,22 +35,25 @@
             <button id="skipButton" class="menuButton"></button>
         </div>
         <div id="startScreen" class="screen">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" style="width: 500px; top: -250px; left: -150px;">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green.png" style="width: 120px; bottom: 80px; right: 200px;">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" style="width: 250px; bottom: -80px; right: 80px;">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" style="width: 300px; bottom: -200px; left: 250px;">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green.png" style="width: 180px; bottom: 120px; left: 40px;">
-            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_red.png" style="width: 150px; top: 30px; right: 50px;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" class="ball" style="width: 500px; top: -250px; left: -150px;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green.png" class="ball" style="width: 120px; bottom: 80px; right: 200px;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" class="ball" style="width: 250px; bottom: -80px; right: 80px;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue.png" class="ball" style="width: 300px; bottom: -200px; left: 250px;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green.png" class="ball" style="width: 180px; bottom: 120px; left: 40px;">
+            <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_red.png" class="ball" style="width: 150px; top: 30px; right: 50px;">
             <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_glow.png" style="width: 100%;">
-            <h1 style="top: 440px;">MOLECULE</h1>
-            <h1 style="top: 580px;background: linear-gradient(to right, #8beefe, #92eeb9); background-clip: text; color: transparent;">PUZZLE</h1>
-            <p id="highScore">0</p>
-            <button id="startButton" style="top: 1100px;">START</button>
+            <h1 class="title" style="top: 440px;">MOLECULE</h1>
+            <h1 class="title" style="top: 580px; background: linear-gradient(to right, #8beefe, #92eeb9); background-clip: text; color: transparent;">PUZZLE</h1>
+            <div class="title" style="display: flex; align-items: center;">
+                <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/icon_trophy.png" style="width: 100px;">
+                <span id="highScore" style="font-size: 80px; font-weight: 100;">0</span>
+            </div>
+            <button id="startButton" class="title" style="top: 1100px;">START</button>
         </div>
         <div id="gameOverScreen" class="screen hidden">
-            <h1 style="top: 500px;">GAME OVER</h1>
-            <p id="finalScore"></p>
-            <button id="retryButton" style="top: 1200px;">RETRY</button>
+            <h1 class="title" style="top: 500px;">GAME OVER</h1>
+            <p id="finalScore" class="title"></p>
+            <button id="retryButton" class="title" style="top: 1200px;">RETRY</button>
         </div>
     </div>
     <script src="index.js"></script>
