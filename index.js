@@ -598,10 +598,25 @@ createParticle([
     [1, [1090, 1200], [-10, 1850], 0.1]
 ])
 
+function createBenzene(benzenes) {
+    benzenes.forEach ((e) => {
+        const benzene = document.createElement("div");
+        benzene.className = "benzene";
+        benzene.style.backgroundImage = `url("https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_benzene.png")`;
+        benzene.start = e[0];
+        benzene.end = e[1];
+        benzene.offset = e[2];
+        startScreen.appendChild(benzene);
+    })
+}
+
+createBenzene([
+    [[-80, 600], [1160, 900], 0],
+    [[-80, 1200], [1160, 600], 0.7],
+    [[-80, 1700], [1160, 1200], 0.3]
+])
+
 function animateTitles(time) {
-    const scale = 1 + Math.sin(time * 0.003) * 0.03;
-    startButton.style.scale = scale;
-    retryButton.style.scale = scale;
     const ring = document.querySelectorAll(".ring");
     ring.forEach((e) => {
         const scale = (time * 0.0001 + e.offset) % 1;
@@ -611,6 +626,12 @@ function animateTitles(time) {
     const particle = document.querySelectorAll(".particle");
     particle.forEach((e) => {
         const scale = (time * 0.00001 + e.offset) % 1;
+        e.style.left = `${e.start[0] + (e.end[0] - e.start[0]) * scale}px`;
+        e.style.top = `${e.start[1] + (e.end[1] - e.start[1]) * scale}px`;
+    })
+    const benzene = document.querySelectorAll(".benzene");
+    benzene.forEach((e) => {
+        const scale = (time * 0.00005 + e.offset) % 1;
         e.style.left = `${e.start[0] + (e.end[0] - e.start[0]) * scale}px`;
         e.style.top = `${e.start[1] + (e.end[1] - e.start[1]) * scale}px`;
     })
