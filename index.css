@@ -22,7 +22,7 @@ body {
 #game {
     flex-shrink: 0;
 
-    background: #010e26;
+    background: #002147;
     overflow: hidden;
 }
 
@@ -32,6 +32,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 30px;
 
     color: white;
     font-family: sans-serif;
@@ -87,7 +89,7 @@ h2 {
 p {
     font-size: 60px;
     font-weight: 400;
-    letter-spacing: 7px;
+    letter-spacing: 8px;
 }
 
 img {
@@ -159,27 +161,51 @@ button:active {
     z-index: 5;
 }
 
-#rankingSubmit {
-    top: 1400px;
+#gameOverTitle {
+    margin: 0px;
 }
 
 #rankingArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     top: 240px;
+    padding: 30px;
+    border: solid 3px #0aa8f2;
+    border-radius: 30px;
+}
+
+#rankingTitle {
+    display: grid;
+    place-items: center;
+    margin: 20px;
+    padding: 10px;
+    width: 650px;
+    font-size: 50px;
+    background: #0a88e3;
+    border-radius: 30px;
+}
+
+#rankingList {
+    width: 580px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#rankingList li {
+    padding: 8px 0;
+    margin: 8px 0;
+    width: 100%;
+    font-size: 40px;
+    text-align: center;
+    background: #013061;
+    border: solid 3px #0a4b84;
+    border-radius: 25px;
 }
 
 #finalScore {
-    top: 1200px;
-}
-
-#loadRankingButton {
-    width: 600px;
-}
-
-#retryButton {
-    top: 1650px;
-}
-
-li {
-    border: solid 3px #89dff8;
-    border-radius: 10px;
+    margin: 0px;
+    padding: 0px;
 }
