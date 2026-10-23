@@ -7,12 +7,12 @@ const GRID_SIZE = 160;
 const GRID_GAP = 4;
 
 const gameLayer = document.getElementById("game");
-const titleLayer = document.getElementById("title");
-const scoreLayer = document.getElementById("score");
-const highScoreLayer = document.getElementById("highScore");
+const nameLayer = document.getElementById("moleculeName");
+const scoreLayer = document.getElementById("currentScore");
+const highScoreLayer = document.getElementById("bestScore");
 const boardLayer = document.getElementById("board");
 const BGCanvas = document.getElementById("background");
-const startScreen = document.getElementById("startScreen");
+const startScreen = document.getElementById("titleScreen");
 const gameScreen = document.getElementById("gameScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const loadingScreen = document.getElementById("loadingScreen");
@@ -20,7 +20,7 @@ const startButton = document.getElementById("startButton");
 const retryButton = document.getElementById("retryButton");
 const homeButton = document.getElementById("homeButton");
 const skipButton = document.getElementById("skipButton");
-const finalScore = document.getElementById("finalScore");
+const finalScore = document.getElementById("gameOverScore");
 const rankingSubmit = document.getElementById("rankingSubmit");
 
 
@@ -184,7 +184,7 @@ async function startGame() {
     gameScreen.classList.remove("hidden");
     gameOverScreen.classList.add("hidden");
 
-    titleLayer.textContent = "";
+    nameLayer.textContent = "";
     score = 0;
     scoreLayer.textContent = score;
 
@@ -529,7 +529,7 @@ function addEventListeners() {
         selectPiece(target);
         drawLine();
     })
-    titleLayer.addEventListener("pointerdown", (e)=> {
+    nameLayer.addEventListener("pointerdown", (e)=> {
         if (displayMode === "name") {
             displayMode = "elements";
         } else {
@@ -548,11 +548,11 @@ function toSubscript(formula) {
 
 function showMolecule(displayMode) {
     if (displayMode === "name") {
-        titleLayer.textContent = formedMolecule.name;
+        nameLayer.textContent = formedMolecule.name;
     } else {
-        titleLayer.textContent = toSubscript(formedMolecule.formula);
+        nameLayer.textContent = toSubscript(formedMolecule.formula);
     }
-    titleLayer.animate([
+    nameLayer.animate([
         {
             transform: "scale(0)"
         },
