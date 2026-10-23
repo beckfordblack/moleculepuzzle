@@ -18,28 +18,28 @@
     <link rel="stylesheet" href="index.css"/>
 </head>
 <body>
-    <div id="game">.
+    <div id="game">
         <canvas id="background"></canvas>
-        <div id="startScreen" class="screen">
+        <div id="titleScreen" class="screen">
             <h1>
                 MOLECULE
-                PUZZULE
+                PUZZLE
             </h1>
-            <div id="highScoreLayer">
+            <div id="bestScoreArea">
                 <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/icon_trophy.png" style="width: 100px;">
-                <span id="highScore" style="font-size: 80px; font-weight: 100;">0</span>
+                <span id="bestScore">0</span>
             </div>
-            <div id="startButtonLayer">
+            <div id="startButtonArea">
                 <div class="titleLine"></div>
                 <button id="startButton">START</button>
                 <div class="titleLine"></div>
             </div>
         </div>
         <div id="gameScreen" class="screen hidden">
-            <h2 id="score">0</h2>
+            <h2 id="currentScore">0</h2>
             <div id="board"></div>
-            <h2 id="title"></h2>
-            <div id="menuButton">
+            <h2 id="moleculeName"></h2>
+            <div id="menuButtons">
                 <button id="homeButton" class="menuButton">HOME</button>
                 <button id="skipButton" class="menuButton">→</button>
             </div>
@@ -47,11 +47,11 @@
         <div id="gameOverScreen" class="screen hidden">
             <h2 id="gameOverTitle">GAME OVER</h1>
                 <div id="rankingArea">
-                    <p id="rankingTitle">RANKING</p>
+                    <p id="rankingHeading">RANKING</p>
                     <ol id="rankingList"></ol>
                 </div>
-            <span id="finalScore">0</span>
-            <div id="rankingSubmit">
+            <span id="gameOverScore">0</span>
+            <div id="rankingSubmission">
                 <input id="playerName" type="text" maxlength="10" placeholder="プレイヤー名">
                 <button id="submitScoreButton">スコアを登録</button>
                 <p id="submitStatus"style="top: 1500px; font-size: 30px;"></p>
