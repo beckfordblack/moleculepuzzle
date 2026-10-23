@@ -600,8 +600,8 @@ document.getElementById("submitScoreButton").addEventListener("click", async () 
         }
         isSubmitting = true;
         submitStatus.textContent = "登録中...";
-        submitRanking(name);
-        loadRanking();
+        await submitRanking(name);
+        await loadRanking();
 });
 
 async function submitRanking(name) {
@@ -632,5 +632,3 @@ async function loadRanking() {
         rankingList.textContent = "ランキングを取得できませんでした";
     }
 }
-
-loadRanking();
