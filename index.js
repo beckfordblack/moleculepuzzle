@@ -6,13 +6,13 @@ const GRID_ROWS = 8;
 const GRID_SIZE = 160;
 const GRID_GAP = 4;
 
-const gameLayer = document.getElementById("game");
-const nameLayer = document.getElementById("moleculeName");
-const scoreLayer = document.getElementById("currentScore");
-const highScoreLayer = document.getElementById("bestScore");
-const boardLayer = document.getElementById("board");
-const BGCanvas = document.getElementById("background");
-const startScreen = document.getElementById("titleScreen");
+const gameElement = document.getElementById("game");
+const moleculeNameElement = document.getElementById("moleculeName");
+const scoreElement = document.getElementById("currentScore");
+const highScoreElement = document.getElementById("bestScore");
+const boardElement = document.getElementById("board");
+const backgroundCanvas = document.getElementById("background");
+const titleScreen = document.getElementById("titleScreen");
 const gameScreen = document.getElementById("gameScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const loadingScreen = document.getElementById("loadingScreen");
@@ -20,8 +20,8 @@ const startButton = document.getElementById("startButton");
 const retryButton = document.getElementById("retryButton");
 const homeButton = document.getElementById("homeButton");
 const skipButton = document.getElementById("skipButton");
-const finalScore = document.getElementById("gameOverScore");
-const rankingSubmit = document.getElementById("rankingSubmit");
+const rankingScoreElement = document.getElementById("gameOverScore");
+const rankingSubmitArea = document.getElementById("rankingSubmission");
 
 
 const ELEMENTS = [
@@ -118,13 +118,13 @@ const MOLECULES = [
     {name: "カフェイン", formula: "C8H10N4O2"},
 ]
 
-let isPointer = false;
+let isPointerDown = false;
 let isPlaying = false;
 let isGameOver = false;
 
-let score = 0;
-let highScore = Number(localStorage.getItem("highScore")) || 0;
-highScoreLayer.textContent = `${highScore}`;
+let currentScore = 0;
+let bestScore = Number(localStorage.getItem("highScore")) || 0;
+highScoreElement.textContent = `${bestScore}`;
 const selectedPieces = [];
 let formedMolecule = "";
 let displayMode = "name";
@@ -134,16 +134,16 @@ let grid = Array.from(
     () => Array(GRID_COLS).fill(null)
 );
 
-gameLayer.style.width = `${GAME_WIDTH}px`;
-gameLayer.style.height = `${GAME_HEIGHT}px`;
+gameElement.style.width = `${GAME_WIDTH}px`;
+gameElement.style.height = `${GAME_HEIGHT}px`;
 
-boardLayer.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
-boardLayer.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
+boardElement.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
+boardElement.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
 
 startButton.addEventListener("click", startGame);
 retryButton.addEventListener("click", startGame);
-homeButton.addEventListener("click", goHome)
-skipButton.addEventListener("click", skip)
+homeButton.addEventListener("click", returnTitle)
+skipButton.addEventListener("click", skipTurn)
 
 window.addEventListener("resize", resizeGame);
 
@@ -151,7 +151,7 @@ document.addEventListener('dblclick', function(e) {
     e.preventDefault();
 }, { passive: false });
 
-addEventListeners();
+registerEventListeners();
 
 function expandFormula(formula) {
     return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
@@ -168,65 +168,65 @@ function resizeGame() {
     const scaleX = window.innerWidth / GAME_WIDTH;
     const scaleY = window.innerHeight / GAME_HEIGHT;
     const scale = Math.min(scaleX, scaleY);
-    gameLayer.style.transform = `scale(${scale})`;
+    gameElement.style.transform = `scale(${scale})`;
     return scale;
 }
 
 resizeGame();
 
 async function startGame() {
-    clearBoard();
+    resetBoard();
 
     isPlaying = false;
     isGameOver = false;
 
-    startScreen.classList.add("hidden");
+    titleScreen.classList.add("hidden");
     gameScreen.classList.remove("hidden");
     gameOverScreen.classList.add("hidden");
 
-    nameLayer.textContent = "";
-    score = 0;
-    scoreLayer.textContent = score;
+    moleculeNameElement.textContent = "";
+    currentScore = 0;
+    scoreElement.textContent = currentScore;
 
     await createInitialPieces();
     isPlaying = true;
 }
 
-function gameOver() {
+function endGame() {
     isGameOver = true;
     isPlaying = false;
     
     
-    rankingSubmit.style.display = "none";
+    rankingSubmitArea.style.display = "none";
 
-    finalScore.textContent = `SCORE: ${score}`;
+    rankingScoreElement.textContent = `SCORE: ${currentScore}`;
     
     gameScreen.classList.add("hidden");
     gameOverScreen.classList.remove("hidden");
     
-    submitRanking("gest");
+    submitScore("gest");
     loadRanking();
 }
 
-function goHome() {
+function returnTitle() {
     isPlaying = false;
     isGameOver = false;
 
-    highScoreLayer.textContent = `${highScore}`;
+    highScoreElement.textContent = `${bestScore}`;
 
-    startScreen.classList.remove("hidden");
+    titleScreen.classList.remove("hidden");
     gameScreen.classList.add("hidden");
     gameOverScreen.classList.add("hidden");
 }
 
-async function skip() {
+async function skipTurn() {
     if (!isPlaying || isGameOver) return;
     isPlaying = false;
     await addNewpieces();
     isPlaying = true;
 }
 
-function clearBoard() {
+function resetBoard() {
     document.querySelectorAll(".pieces").forEach((e) => {
         e.remove();
     })
@@ -238,7 +238,7 @@ function clearBoard() {
     selectedPieces.length = 0;
 }
 
-function updateGrid() {
+function rebuildGrid() {
     const newGrid = Array.from(
         {length: GRID_ROWS},
         () => Array(GRID_COLS).fill(null)
@@ -262,7 +262,7 @@ async function createInitialPieces() {
     await Promise.all(animations);
 }
 
-function collapsePieces() {
+function dropPieces() {
     for (let col = 0; col< GRID_COLS; col++) {
         let row = GRID_ROWS - 1;
         for (let y = GRID_ROWS - 1; y >= 0; y--) {
@@ -271,7 +271,7 @@ function collapsePieces() {
             if (row <= 0 && !isGameOver) {
                 isGameOver = true;
                 setTimeout(() => {
-                    gameOver();
+                    endGame();
                 }, 1500);
             }
             piece.gridY = row;
@@ -285,8 +285,8 @@ async function addNewpieces() {
         if (Math.random() < 0.2) continue;
         createPiece(col, 0, 0);
     }
-    collapsePieces();
-    grid = updateGrid();
+    dropPieces();
+    grid = rebuildGrid();
     const animations = [];
     document.querySelectorAll(".pieces").forEach((piece) => {
         animations.push(animatePiece(piece));
@@ -298,7 +298,7 @@ function createPiece(gridX, gridY, delay) {
     const piece = document.createElement("div");
     piece.className = "pieces";
     piece.element = elementPool[Math.floor(Math.random() * elementPool.length)];
-    boardLayer.appendChild(piece);
+    boardElement.appendChild(piece);
     grid[gridY][gridX] = piece;
 
     const element = ELEMENTS[piece.element];
@@ -447,7 +447,7 @@ function createLine(x, y, x2, y2) {
 
     const line = document.createElement("div");
     line.className = "lines";
-    boardLayer.appendChild(line);
+    boardElement.appendChild(line);
 
     if (dx === 0) {
         line.style.width = `12px`;
@@ -468,18 +468,18 @@ function clearLines() {
     })
 }
 
-function addEventListeners() {
+function registerEventListeners() {
     document.addEventListener("pointerdown", (e) => {
         if (!isPlaying || isGameOver) return;
         const target = document.elementFromPoint(e.clientX, e.clientY);
         if (target?.classList.contains("pieces")) {
-            isPointer = true;
+            isPointerDown = true;
             selectPiece(target);
         }
     })
 
     document.addEventListener("pointerup", (e) => {
-        isPointer = false;
+        isPointerDown = false;
         const molecule = findMolecule(selectedPieces);
         if (molecule === null) {
             clearSelection();
@@ -489,12 +489,12 @@ function addEventListeners() {
         
         formedMolecule = molecule;
         displayMode = "name";
-        showMolecule("name"); 
-        score += selectedPieces.length ** 2;
-        scoreLayer.textContent = score;
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem("highScore", highScore);
+        displayMolecule("name"); 
+        currentScore += selectedPieces.length ** 2;
+        scoreElement.textContent = currentScore;
+        if (currentScore > bestScore) {
+            bestScore = currentScore;
+            localStorage.setItem("highScore", bestScore);
         }
         isPlaying = false;
         clearLines();
@@ -506,7 +506,7 @@ function addEventListeners() {
     })
 
     document.addEventListener("pointermove", (e) => {
-        if (!isPlaying || isGameOver || !isPointer) return;
+        if (!isPlaying || isGameOver || !isPointerDown) return;
         const target = document.elementFromPoint(e.clientX, e.clientY);
         if (!target?.classList.contains("pieces")) return;
         if (selectedPieces.includes(target)) {
@@ -529,13 +529,13 @@ function addEventListeners() {
         selectPiece(target);
         drawLine();
     })
-    nameLayer.addEventListener("pointerdown", (e)=> {
+    moleculeNameElement.addEventListener("pointerdown", (e)=> {
         if (displayMode === "name") {
             displayMode = "elements";
         } else {
             displayMode = "name";
         }
-        showMolecule(displayMode);
+        displayMolecule(displayMode);
     })
 }
 
@@ -546,13 +546,13 @@ function toSubscript(formula) {
     );
 }
 
-function showMolecule(displayMode) {
+function displayMolecule(displayMode) {
     if (displayMode === "name") {
-        nameLayer.textContent = formedMolecule.name;
+        moleculeNameElement.textContent = formedMolecule.name;
     } else {
-        nameLayer.textContent = toSubscript(formedMolecule.formula);
+        moleculeNameElement.textContent = toSubscript(formedMolecule.formula);
     }
-    nameLayer.animate([
+    moleculeNameElement.animate([
         {
             transform: "scale(0)"
         },
@@ -569,7 +569,7 @@ function showMolecule(displayMode) {
     });
 }
 
-async function loadTitleScreen() {
+async function hideLoadingScreen() {
     const images = [...document.querySelectorAll("img")];
     await Promise.all(
         images.map(img => {
@@ -582,9 +582,9 @@ async function loadTitleScreen() {
     loadingScreen.classList.add("hidden");
 }
 
-loadTitleScreen();
+hideLoadingScreen();
 
-const BGCtx = BGCanvas.getContext("2d");
+const backgroundCtx = backgroundCanvas.getContext("2d");
 
 const playerName = document.getElementById("playerName");
 const submitStatus = document.getElementById("submitStatus");
@@ -601,14 +601,14 @@ document.getElementById("submitScoreButton").addEventListener("click", async () 
         }
         isSubmitting = true;
         submitStatus.textContent = "登録中...";
-        await submitRanking(name);
+        await submitScore(name);
         await loadRanking();
 });
 
-async function submitRanking(name) {
+async function submitScore(name) {
     try {
         const { saveScore } = await import("./firestore.js");
-        await saveScore(name, score);
+        await saveScore(name, currentScore);
         submitStatus.textContent = "登録しました";
     } catch (error) {
         console.error(error);
