@@ -195,16 +195,17 @@ async function startGame() {
 function gameOver() {
     isGameOver = true;
     isPlaying = false;
-
-    loadRanking();
-    submitRanking("gest");
-
+    
+    
     rankingSubmit.style.display = "none";
 
     finalScore.textContent = `SCORE: ${score}`;
-
+    
     gameScreen.classList.add("hidden");
     gameOverScreen.classList.remove("hidden");
+    
+    submitRanking("gest");
+    loadRanking();
 }
 
 function goHome() {
@@ -267,7 +268,7 @@ function collapsePieces() {
         for (let y = GRID_ROWS - 1; y >= 0; y--) {
             const piece = grid[y][col];
             if (piece === null) continue;
-            if (row <= 0) {
+            if (row <= 0 && !isGameOver) {
                 isGameOver = true;
                 setTimeout(() => {
                     gameOver();
@@ -624,7 +625,7 @@ async function loadRanking() {
         rankingList.replaceChildren();
         scores.forEach((data) => {
             const item = document.createElement("li");
-            item.textContent = `${data.name}: ${data.score}点`;
+            item.textContent = `${data.name} : ${data.score}`;
             rankingList.appendChild(item);
         });
     } catch (error) {
