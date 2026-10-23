@@ -20,7 +20,7 @@
 <body>
     <div id="game">.
         <canvas id="background"></canvas>
-        <div id="startScreen" class="screen">
+        <div id="startScreen" class="screen hidden">
             <h1 class="title" style="top: 440px;">MOLECULE</h1>
             <h1 class="title" style="top: 590px;">PUZZLE</h1>
             <div class="title" style="display: flex; align-items: center; top: 950px;">
@@ -38,19 +38,19 @@
             <button id="homeButton" class="menuButton title" style="left: 180px;">HOME</button>
             <button id="skipButton" class="menuButton title" style="right: 180px;">→</button>
         </div>
-        <div id="gameOverScreen" class="screen hidden">
-            <h2 class="title" style="top: 150px;">GAME OVER</h1>
-                <div id="rankingArea" class="title">
-                    <p>RONKING</p>
-                    <ol id="rankingList" style="font-size: 50px;"></ol>
+        <div id="gameOverScreen" class="screen">
+            <h2 id="gameOverTitle">GAME OVER</h1>
+                <div id="rankingArea">
+                    <p id="rankingTitle">RANKING</p>
+                    <ol id="rankingList"></ol>
                 </div>
-            <p id="finalScore" class="title"></p>
-            <div id="rankingSubmit" class="title">
+            <p id="finalScore">0</p>
+            <div id="rankingSubmit">
                 <input id="playerName" type="text" maxlength="20" placeholder="プレイヤー名">
                 <button id="submitScoreButton">スコアを登録</button>
-                <p id="submitStatus" class="title" style="top: 1500px; font-size: 30px;"></p>
+                <p id="submitStatus"style="top: 1500px; font-size: 30px;"></p>
             </div>
-            <button id="retryButton" class="title">RETRY</button>
+            <button id="retryButton">RETRY</button>
         </div>
         <div id="loadingScreen" class="screen"></div>
     </div>
