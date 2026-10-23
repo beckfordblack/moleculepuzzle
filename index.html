@@ -21,22 +21,28 @@
     <div id="game">.
         <canvas id="background"></canvas>
         <div id="startScreen" class="screen">
-            <h1 class="title" style="top: 440px;">MOLECULE</h1>
-            <h1 class="title" style="top: 590px;">PUZZLE</h1>
-            <div class="title" style="display: flex; align-items: center; top: 950px;">
+            <h1>
+                MOLECULE
+                PUZZULE
+            </h1>
+            <div id="highScoreLayer">
                 <img src="https://github.com/beckfordblack/moleculepuzzle/raw/main/images/icon_trophy.png" style="width: 100px;">
                 <span id="highScore" style="font-size: 80px; font-weight: 100;">0</span>
             </div>
-            <button id="startButton" class="title" style="top: 1150px;">START</button>
-            <div class="title" style="width: 100px; height: 3px; top: 1210px; left: 170px; background: white;"></div>
-            <div class="title" style="width: 100px; height: 3px; top: 1210px; right: 170px; background: white;"></div>
+            <div id="startButtonLayer">
+                <div class="titleLine"></div>
+                <button id="startButton">START</button>
+                <div class="titleLine"></div>
+            </div>
         </div>
         <div id="gameScreen" class="screen hidden">
-            <h2 id="title" class="title"></h2>
-            <h2 id="score" class="title">0</h2>
+            <h2 id="score">0</h2>
             <div id="board"></div>
-            <button id="homeButton" class="menuButton title" style="left: 180px;">HOME</button>
-            <button id="skipButton" class="menuButton title" style="right: 180px;">→</button>
+            <h2 id="title"></h2>
+            <div id="menuButton">
+                <button id="homeButton" class="menuButton">HOME</button>
+                <button id="skipButton" class="menuButton">→</button>
+            </div>
         </div>
         <div id="gameOverScreen" class="screen hidden">
             <h2 id="gameOverTitle">GAME OVER</h1>
@@ -44,9 +50,9 @@
                     <p id="rankingTitle">RANKING</p>
                     <ol id="rankingList"></ol>
                 </div>
-            <p id="finalScore">0</p>
+            <span id="finalScore">0</span>
             <div id="rankingSubmit">
-                <input id="playerName" type="text" maxlength="20" placeholder="プレイヤー名">
+                <input id="playerName" type="text" maxlength="10" placeholder="プレイヤー名">
                 <button id="submitScoreButton">スコアを登録</button>
                 <p id="submitStatus"style="top: 1500px; font-size: 30px;"></p>
             </div>
