@@ -7,22 +7,28 @@ const GRID_SIZE = 160;
 const GRID_GAP = 4;
 
 const gameElement = document.getElementById("game");
-const moleculeNameElement = document.getElementById("moleculeName");
-const scoreElement = document.getElementById("currentScore");
-const highScoreElement = document.getElementById("bestScore");
-const boardElement = document.getElementById("board");
 const backgroundCanvas = document.getElementById("background");
 const titleScreen = document.getElementById("titleScreen");
 const gameScreen = document.getElementById("gameScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
 const loadingScreen = document.getElementById("loadingScreen");
+
+const moleculeNameElement = document.getElementById("moleculeName");
+const scoreElement = document.getElementById("currentScore");
+const highScoreElement = document.getElementById("bestScore");
+const rankingScoreElement = document.getElementById("gameOverScore");
+const boardElement = document.getElementById("board");
+
 const startButton = document.getElementById("startButton");
 const retryButton = document.getElementById("retryButton");
 const homeButton = document.getElementById("homeButton");
 const skipButton = document.getElementById("skipButton");
-const rankingScoreElement = document.getElementById("gameOverScore");
 const rankingSubmitArea = document.getElementById("rankingSubmission");
 
+const playerName = document.getElementById("playerName");
+const submitScoreButton = document.getElementById("submitScoreButton");
+const submitStatus = document.getElementById("submitStatus");
+const rankingList = document.getElementById("rankingList");
 
 const ELEMENTS = [
     {text: "H", color: "#448787"},
@@ -31,7 +37,7 @@ const ELEMENTS = [
     {text: "O", color: "#a73425"}
 ];
 
-const elementPool = [0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
+const ELEMENT_POOL = [0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3]
 
 const MOLECULES = [
     {name: "水素", formula: "H2"},
@@ -121,18 +127,21 @@ const MOLECULES = [
 let isPointerDown = false;
 let isPlaying = false;
 let isGameOver = false;
+let isSubmitting = false;
 
 let currentScore = 0;
 let bestScore = Number(localStorage.getItem("highScore")) || 0;
-highScoreElement.textContent = `${bestScore}`;
-const selectedPieces = [];
-let formedMolecule = "";
+
+let formedMolecule = null;
 let displayMode = "name";
 
+const selectedPieces = [];
 let grid = Array.from(
     {length: GRID_ROWS},
     () => Array(GRID_COLS).fill(null)
 );
+
+highScoreElement.textContent = `${bestScore}`;
 
 gameElement.style.width = `${GAME_WIDTH}px`;
 gameElement.style.height = `${GAME_HEIGHT}px`;
@@ -145,6 +154,19 @@ retryButton.addEventListener("click", startGame);
 homeButton.addEventListener("click", returnTitle)
 skipButton.addEventListener("click", skipTurn)
 
+submitScoreButton.addEventListener("click", async () => {
+        if (isSubmitting) return;
+        const name = playerName.value.trim();
+        if (!name) {
+            submitStatus.textContent = "名前を入力してください";
+            return;
+        }
+        isSubmitting = true;
+        submitStatus.textContent = "登録中...";
+        await submitScore(name);
+        await loadRanking();
+});
+
 window.addEventListener("resize", resizeGame);
 
 document.addEventListener('dblclick', function(e) {
@@ -153,17 +175,14 @@ document.addEventListener('dblclick', function(e) {
 
 registerEventListeners();
 
-function expandFormula(formula) {
-    return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
-    .flatMap(([_, element, count]) =>
-        Array(Number(count) || 1).fill(element)
-);
-}
-
 MOLECULES.forEach((e) => {
     e.elements = expandFormula(e.formula)
 });
 
+resizeGame();
+hideLoadingScreen();
+
+//init
 function resizeGame() {
     const scaleX = window.innerWidth / GAME_WIDTH;
     const scaleY = window.innerHeight / GAME_HEIGHT;
@@ -171,9 +190,20 @@ function resizeGame() {
     gameElement.style.transform = `scale(${scale})`;
     return scale;
 }
+async function hideLoadingScreen() {
+    const images = [...document.querySelectorAll("img")];
+    await Promise.all(
+        images.map(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                return Promise.resolve();
+            }
+            return img.decode().catch(() => {});
+        })
+    );
+    loadingScreen.classList.add("hidden");
+}
 
-resizeGame();
-
+//
 async function startGame() {
     resetBoard();
 
@@ -191,7 +221,6 @@ async function startGame() {
     await createInitialPieces();
     isPlaying = true;
 }
-
 function endGame() {
     isGameOver = true;
     isPlaying = false;
@@ -207,7 +236,6 @@ function endGame() {
     submitScore("gest");
     loadRanking();
 }
-
 function returnTitle() {
     isPlaying = false;
     isGameOver = false;
@@ -218,14 +246,14 @@ function returnTitle() {
     gameScreen.classList.add("hidden");
     gameOverScreen.classList.add("hidden");
 }
-
 async function skipTurn() {
     if (!isPlaying || isGameOver) return;
     isPlaying = false;
-    await addNewpieces();
+    await addNewPieces();
     isPlaying = true;
 }
 
+//boad
 function resetBoard() {
     document.querySelectorAll(".pieces").forEach((e) => {
         e.remove();
@@ -237,7 +265,6 @@ function resetBoard() {
     );
     selectedPieces.length = 0;
 }
-
 function rebuildGrid() {
     const newGrid = Array.from(
         {length: GRID_ROWS},
@@ -248,20 +275,6 @@ function rebuildGrid() {
     })
     return newGrid;
 }
-
-async function createInitialPieces() {
-    for (let col = 0; col < GRID_COLS; col++) {
-        for (let row = 0; row < 3; row++) {
-            createPiece(col, (GRID_ROWS - 1) - row, row * 180);
-        }
-    }
-    const animations = [];
-    document.querySelectorAll(".pieces").forEach((piece) => {
-        animations.push(animatePiece(piece));
-    });
-    await Promise.all(animations);
-}
-
 function dropPieces() {
     for (let col = 0; col< GRID_COLS; col++) {
         let row = GRID_ROWS - 1;
@@ -280,7 +293,43 @@ function dropPieces() {
     }
 }
 
-async function addNewpieces() {
+//Pieces
+function createPiece(gridX, gridY, delay) {
+    const piece = document.createElement("div");
+    piece.className = "pieces";
+    piece.element = ELEMENT_POOL[Math.floor(Math.random() * ELEMENT_POOL.length)];
+    boardElement.appendChild(piece);
+    grid[gridY][gridX] = piece;
+    
+    const element = ELEMENTS[piece.element];
+    piece.textContent = element.text;
+    piece.style.background = element.color;
+    piece.style.width = `${GRID_SIZE}px`;
+    piece.style.height = `${GRID_SIZE}px`;
+    piece.gridX = gridX;
+    piece.gridY = gridY;
+    piece.style.left = 
+    `${gridX * (GRID_SIZE + GRID_GAP)}px`;
+    piece.style.top = `0px`;
+    piece.animatedY = - 180 - delay;
+    piece.scale = 1;
+    piece.style.transform = 
+    `translateY(${piece.animatedY}px)`;
+    piece.isAnimating = false;
+}
+async function createInitialPieces() {
+    for (let col = 0; col < GRID_COLS; col++) {
+        for (let row = 0; row < 3; row++) {
+            createPiece(col, (GRID_ROWS - 1) - row, row * 180);
+        }
+    }
+    const animations = [];
+    document.querySelectorAll(".pieces").forEach((piece) => {
+        animations.push(animatePiece(piece));
+    });
+    await Promise.all(animations);
+}
+async function addNewPieces() {
     for (let col = 0; col < GRID_COLS; col++) {
         if (Math.random() < 0.2) continue;
         createPiece(col, 0, 0);
@@ -293,31 +342,6 @@ async function addNewpieces() {
     });
     await Promise.all(animations);
 }
-
-function createPiece(gridX, gridY, delay) {
-    const piece = document.createElement("div");
-    piece.className = "pieces";
-    piece.element = elementPool[Math.floor(Math.random() * elementPool.length)];
-    boardElement.appendChild(piece);
-    grid[gridY][gridX] = piece;
-
-    const element = ELEMENTS[piece.element];
-    piece.textContent = element.text;
-    piece.style.background = element.color;
-    piece.style.width = `${GRID_SIZE}px`;
-    piece.style.height = `${GRID_SIZE}px`;
-    piece.gridX = gridX;
-    piece.gridY = gridY;
-    piece.style.left = 
-        `${gridX * (GRID_SIZE + GRID_GAP)}px`;
-    piece.style.top = `0px`;
-    piece.animatedY = - 180 - delay;
-    piece.scale = 1;
-    piece.style.transform = 
-                `translateY(${piece.animatedY}px)`;
-    piece.isAnimating = false;
-}
-
 function animatePiece(piece) {
     if (piece.isAnimating) return Promise.resolve();
     piece.isAnimating = true;
@@ -367,6 +391,7 @@ function animatePiece(piece) {
     });
 }
 
+//selection
 function selectPiece(piece) {
     const element = ELEMENTS[piece.element];
 
@@ -379,7 +404,6 @@ function selectPiece(piece) {
 
     selectedPieces.push(piece);
 }
-
 function clearSelection() {
     selectedPieces.forEach((piece) => {
         piece.style.filter = 
@@ -389,7 +413,6 @@ function clearSelection() {
     });
     selectedPieces.length = 0;
 }
-
 function removeSelectedPieces() {
     selectedPieces.forEach((piece) => {
         grid[piece.gridY][piece.gridX] = null;
@@ -418,6 +441,13 @@ function removeSelectedPieces() {
     selectedPieces.length = 0;
 }
 
+//judgment
+function expandFormula(formula) {
+    return [...formula.matchAll(/([A-Z][a-z]?)(\d*)/g)]
+    .flatMap(([_, element, count]) =>
+        Array(Number(count) || 1).fill(element)
+);
+}
 function findMolecule(pieces) {
     const selectedElements = pieces
         .map((piece) => ELEMENTS[piece.element].text)
@@ -434,13 +464,41 @@ function findMolecule(pieces) {
         );
     }) ?? null;
 }
+function toSubscript(formula) {
+    const subscript = "₀₁₂₃₄₅₆₇₈₉";
+    return formula.replace(/\d/g, n =>
+        n === "1" ? "" : [...n].map(d => subscript[d]).join("")
+    );
+}
+function displayMolecule(displayMode) {
+    if (displayMode === "name") {
+        moleculeNameElement.textContent = formedMolecule.name;
+    } else {
+        moleculeNameElement.textContent = toSubscript(formedMolecule.formula);
+    }
+    moleculeNameElement.animate([
+        {
+            transform: "scale(0)"
+        },
+        {
+            transform: "scale(1.3)",
+            offset: 0.3
+        },
+        {
+            transform: "scale(1)"
+        }
+    ], {
+        duration: 200,
+        easing: "ease-out"        
+    });
+}
 
+//line
 function drawLine() {
     for (let i = 1; i < selectedPieces.length; i++) {
         createLine(selectedPieces[i].gridX, selectedPieces[i].gridY, selectedPieces[i - 1].gridX, selectedPieces[i - 1].gridY)
     }
 }
-
 function createLine(x, y, x2, y2) {
     const dx = x2 - x;
     const dy = y2 - y;
@@ -461,7 +519,6 @@ function createLine(x, y, x2, y2) {
     line.style.top = 
         `${y * (GRID_SIZE + GRID_GAP) + GRID_SIZE / 2 + dy * (GRID_SIZE + GRID_GAP) / 2}px`;
 }
-
 function clearLines() {
     document.querySelectorAll(".lines").forEach((e) => {
         e.remove();
@@ -500,7 +557,7 @@ function registerEventListeners() {
         clearLines();
         removeSelectedPieces();
         setTimeout(async () => {
-            await addNewpieces();
+            await addNewPieces();
             isPlaying = true;
         }, 350);
     })
@@ -539,72 +596,7 @@ function registerEventListeners() {
     })
 }
 
-function toSubscript(formula) {
-    const subscript = "₀₁₂₃₄₅₆₇₈₉";
-    return formula.replace(/\d/g, n =>
-        n === "1" ? "" : [...n].map(d => subscript[d]).join("")
-    );
-}
-
-function displayMolecule(displayMode) {
-    if (displayMode === "name") {
-        moleculeNameElement.textContent = formedMolecule.name;
-    } else {
-        moleculeNameElement.textContent = toSubscript(formedMolecule.formula);
-    }
-    moleculeNameElement.animate([
-        {
-            transform: "scale(0)"
-        },
-        {
-            transform: "scale(1.3)",
-            offset: 0.3
-        },
-        {
-            transform: "scale(1)"
-        }
-    ], {
-        duration: 200,
-        easing: "ease-out"        
-    });
-}
-
-async function hideLoadingScreen() {
-    const images = [...document.querySelectorAll("img")];
-    await Promise.all(
-        images.map(img => {
-            if (img.complete && img.naturalWidth > 0) {
-                return Promise.resolve();
-            }
-            return img.decode().catch(() => {});
-        })
-    );
-    loadingScreen.classList.add("hidden");
-}
-
-hideLoadingScreen();
-
-const backgroundCtx = backgroundCanvas.getContext("2d");
-
-const playerName = document.getElementById("playerName");
-const submitStatus = document.getElementById("submitStatus");
-const rankingList = document.getElementById("rankingList");
-
-let isSubmitting = false;
-
-document.getElementById("submitScoreButton").addEventListener("click", async () => {
-        if (isSubmitting) return;
-        const name = playerName.value.trim();
-        if (!name) {
-            submitStatus.textContent = "名前を入力してください";
-            return;
-        }
-        isSubmitting = true;
-        submitStatus.textContent = "登録中...";
-        await submitScore(name);
-        await loadRanking();
-});
-
+//ranking
 async function submitScore(name) {
     try {
         const { saveScore } = await import("./firestore.js");
@@ -617,7 +609,6 @@ async function submitScore(name) {
         isSubmitting = false;
     }
 }
-
 async function loadRanking() {
     try {
         const { getRanking } = await import("./firestore.js");
@@ -633,3 +624,5 @@ async function loadRanking() {
         rankingList.textContent = `${error.code ?? error.message}`;
     }
 }
+
+const backgroundCtx = backgroundCanvas.getContext("2d");
