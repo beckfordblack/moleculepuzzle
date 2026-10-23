@@ -11,8 +11,11 @@ const titleLayer = document.getElementById("title");
 const scoreLayer = document.getElementById("score");
 const highScoreLayer = document.getElementById("highScore");
 const boardLayer = document.getElementById("board");
+const BGCanvas = document.getElementById("background");
 const startScreen = document.getElementById("startScreen");
+const gameScreen = document.getElementById("gameScreen");
 const gameOverScreen = document.getElementById("gameOverScreen");
+const loadingScreen = document.getElementById("loadingScreen");
 const startButton = document.getElementById("startButton");
 const retryButton = document.getElementById("retryButton");
 const homeButton = document.getElementById("homeButton");
@@ -176,6 +179,7 @@ async function startGame() {
     isGameOver = false;
 
     startScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
     gameOverScreen.classList.add("hidden");
 
     titleLayer.textContent = "";
@@ -190,7 +194,11 @@ function gameOver() {
     isGameOver = true;
     isPlaying = false;
 
+    loadRanking();
+
     finalScore.textContent = `SCORE: ${score}`;
+
+    gameScreen.classList.add("hidden");
     gameOverScreen.classList.remove("hidden");
 }
 
@@ -199,7 +207,9 @@ function goHome() {
     isGameOver = false;
 
     highScoreLayer.textContent = `${highScore}`;
+
     startScreen.classList.remove("hidden");
+    gameScreen.classList.add("hidden");
     gameOverScreen.classList.add("hidden");
 }
 
@@ -553,89 +563,68 @@ function showMolecule(displayMode) {
     });
 }
 
-function createRing(rings) {
-    rings.forEach((e) => {
-        const ring = document.createElement("div");
-        ring.className = "ring";
-        ring.style.width = `${e[0]}px`;
-        ring.style.height = `${e[0]}px`;
-        ring.style.top = `${e[1]}px`;
-        ring.style.left = `${e[2]}px`;
-        ring.offset = e[3];
-        startScreen.appendChild(ring);  
-    })
+async function loadTitleScreen() {
+    const images = [...document.querySelectorAll("img")];
+    await Promise.all(
+        images.map(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                return Promise.resolve();
+            }
+            return img.decode().catch(() => {});
+        })
+    );
+    loadingScreen.classList.add("hidden");
 }
 
-createRing([
-    [700, -300, -300, 0.8],
-    [700, 1400, -200, 0.2],
-    [1000, 1400, 400, 0.5],
-    [600, 1600, 800, 0.1]
-]);
+loadTitleScreen();
 
-function createParticle(particles) {
-    particles.forEach ((e) => {
-        const particle = document.createElement("div");
-        particle.className = "particle";
-        if (e[0]) {
-            particle.style.backgroundImage = `url("https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_green_particle.png")`;
-        } else {
-            particle.style.backgroundImage = `url("https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_blue_particle.png")`;
+const BGCtx = BGCanvas.getContext("2d");
+
+BGCtx.fillStyle = "#446767";
+BGCtx.fillRect(100,100,200,200);
+
+const playerName = document.getElementById("playerName");
+const submitStatus = document.getElementById("submitStatus");
+const rankingList = document.getElementById("rankingList");
+
+let isSubmitting = false;
+
+document.getElementById("submitScoreButton").addEventListener("click", async () => {
+        if (isSubmitting) return;
+        const name = playerName.value.trim();
+        if (!name) {
+            submitStatus.textContent = "名前を入力してください";
+            return;
         }
-            particle.start = e[1];
-        particle.end = e[2];
-        particle.offset = e[3];
-        startScreen.appendChild(particle);
-    })
+        isSubmitting = true;
+        submitStatus.textContent = "登録中...";
+        try {
+            const { saveScore } = await import("./firestore.js");
+            await saveScore(name, score);
+            submitStatus.textContent = "登録しました";
+        } catch (error) {
+            console.error(error);
+            submitStatus.textContent = "登録に失敗しました";
+        } finally {
+            isSubmitting = false;
+        }
+        loadRanking();
+});
+
+async function loadRanking() {
+    rankingList.replaceChildren();
+    try {
+        const { getRanking } = await import("./firestore.js");
+        const scores = await getRanking();
+        scores.forEach((data) => {
+            const item = document.createElement("li");
+            item.textContent = `${data.name}: ${data.score}点`;
+            rankingList.appendChild(item);
+        });
+    } catch (error) {
+        console.log(error);
+        rankingList.textContent = "ランキングを取得できませんでした";
+    }
 }
 
-createParticle([
-    [0, [-10, 600], [600, -10], 0],
-    [0, [-10, 1400], [1090, 1800], 0.5],
-    [0, [300, 1930], [-10, 900], 0.9],
-    [1, [700, 1930], [-10, 1200], 0.6],
-    [1, [1090, 300], [800, 1930], 0.8],
-    [1, [1090, 1200], [-10, 1850], 0.1]
-])
-
-function createBenzene(benzenes) {
-    benzenes.forEach ((e) => {
-        const benzene = document.createElement("div");
-        benzene.className = "benzene";
-        benzene.style.backgroundImage = `url("https://github.com/beckfordblack/moleculepuzzle/raw/main/images/title_benzene.png")`;
-        benzene.start = e[0];
-        benzene.end = e[1];
-        benzene.offset = e[2];
-        startScreen.appendChild(benzene);
-    })
-}
-
-createBenzene([
-    [[-80, 600], [1160, 900], 0],
-    [[-80, 1200], [1160, 600], 0.7],
-    [[-80, 1700], [1160, 1200], 0.3]
-])
-
-function animateTitles(time) {
-    const ring = document.querySelectorAll(".ring");
-    ring.forEach((e) => {
-        const scale = (time * 0.0001 + e.offset) % 1;
-        e.style.scale = 0.5 + scale;
-        e.style.opacity = 0.6 * Math.sin(scale * Math.PI);
-    })
-    const particle = document.querySelectorAll(".particle");
-    particle.forEach((e) => {
-        const scale = (time * 0.00001 + e.offset) % 1;
-        e.style.left = `${e.start[0] + (e.end[0] - e.start[0]) * scale}px`;
-        e.style.top = `${e.start[1] + (e.end[1] - e.start[1]) * scale}px`;
-    })
-    const benzene = document.querySelectorAll(".benzene");
-    benzene.forEach((e) => {
-        const scale = (time * 0.00005 + e.offset) % 1;
-        e.style.left = `${e.start[0] + (e.end[0] - e.start[0]) * scale}px`;
-        e.style.top = `${e.start[1] + (e.end[1] - e.start[1]) * scale}px`;
-    })
-    requestAnimationFrame(animateTitles);
-}
-
-requestAnimationFrame(animateTitles);
+loadRanking();
