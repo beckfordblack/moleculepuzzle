@@ -168,10 +168,6 @@ button:active {
     z-index: 5;
 }
 
-#gameOverHeading {
-    margin: 0px;
-}
-
 #rankingArea {
     display: flex;
     flex-direction: column;
@@ -182,7 +178,7 @@ button:active {
     border-radius: 30px;
 }
 
-#rankingTitle {
+#rankingHeading {
     display: grid;
     place-items: center;
     margin: 20px;
@@ -212,6 +208,6 @@ button:active {
     border-radius: 25px;
 }
 
-#finalScore {
+#gameOverScore {
     font-size: 60px;
 }
