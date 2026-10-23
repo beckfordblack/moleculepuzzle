@@ -21,6 +21,8 @@ const retryButton = document.getElementById("retryButton");
 const homeButton = document.getElementById("homeButton");
 const skipButton = document.getElementById("skipButton");
 const finalScore = document.getElementById("finalScore");
+const rankingSubmit = document.getElementById("rankingSubmit");
+
 
 const ELEMENTS = [
     {text: "H", color: "#448787"},
@@ -195,6 +197,9 @@ function gameOver() {
     isPlaying = false;
 
     loadRanking();
+    submitRanking("gest");
+
+    rankingSubmit.style.display = "none";
 
     finalScore.textContent = `SCORE: ${score}`;
 
@@ -580,9 +585,6 @@ loadTitleScreen();
 
 const BGCtx = BGCanvas.getContext("2d");
 
-BGCtx.fillStyle = "#446767";
-BGCtx.fillRect(100,100,200,200);
-
 const playerName = document.getElementById("playerName");
 const submitStatus = document.getElementById("submitStatus");
 const rankingList = document.getElementById("rankingList");
@@ -598,24 +600,28 @@ document.getElementById("submitScoreButton").addEventListener("click", async () 
         }
         isSubmitting = true;
         submitStatus.textContent = "登録中...";
-        try {
-            const { saveScore } = await import("./firestore.js");
-            await saveScore(name, score);
-            submitStatus.textContent = "登録しました";
-        } catch (error) {
-            console.error(error);
-            submitStatus.textContent = "登録に失敗しました";
-        } finally {
-            isSubmitting = false;
-        }
+        submitRanking(name);
         loadRanking();
 });
 
+async function submitRanking(name) {
+    try {
+        const { saveScore } = await import("./firestore.js");
+        await saveScore(name, score);
+        submitStatus.textContent = "登録しました";
+    } catch (error) {
+        console.error(error);
+        submitStatus.textContent = "登録に失敗しました";
+    } finally {
+        isSubmitting = false;
+    }
+}
+
 async function loadRanking() {
-    rankingList.replaceChildren();
     try {
         const { getRanking } = await import("./firestore.js");
         const scores = await getRanking();
+        rankingList.replaceChildren();
         scores.forEach((data) => {
             const item = document.createElement("li");
             item.textContent = `${data.name}: ${data.score}点`;
