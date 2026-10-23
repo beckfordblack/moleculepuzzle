@@ -629,6 +629,6 @@ async function loadRanking() {
         });
     } catch (error) {
         console.log(error);
-        rankingList.textContent = "ランキングを取得できませんでした";
+        rankingList.textContent = `${error.code ?? error.message}`;
     }
 }
