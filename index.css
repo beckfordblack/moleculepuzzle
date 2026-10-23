@@ -102,13 +102,18 @@ button:active {
     scale: 0.9;
 }
 
-#highScoreLayer {
+#bestScoreArea {
     display: flex;
     align-items: center;
     margin: 50px;
 }
 
-#startButtonLayer {
+#bestScore {
+    font-size: 80px;
+    font-weight: 100;
+}
+
+#startButtonArea {
     display: flex;
     align-items: center;
     gap: 30px;
@@ -129,7 +134,7 @@ button:active {
     overflow: hidden;
 }
 
-#menuButton {
+#menuButtons {
     display: flex;
     gap: 80px;
     z-index: 100;
@@ -163,7 +168,7 @@ button:active {
     z-index: 5;
 }
 
-#gameOverTitle {
+#gameOverHeading {
     margin: 0px;
 }
 
