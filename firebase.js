@@ -16,7 +16,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-import { collection, addDoc } from
+import {
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    orderBy,
+    limit
+} from
     "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"
 
 export async function saveScore(name, score) {
@@ -25,4 +32,14 @@ export async function saveScore(name, score) {
         score: score,
         createdAt: Date.now()
     });
+}
+
+export async function getRanking() {
+    const q = query(
+        collection(db, "scores"),
+        orderBy("score", "desc"),
+        limit(10)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => doc.data());
 }
