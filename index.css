@@ -128,7 +128,7 @@ button:active {
 #board {
     position: relative;
     
-    background: #010e2693;
+    background: #0016309d;
     border-radius: 18px;
     border: solid 3px #fff;
     overflow: hidden;
@@ -174,6 +174,7 @@ button:active {
     align-items: center;
     top: 240px;
     padding: 30px;
+    background: #0016309d;
     border: solid 3px #0aa8f2;
     border-radius: 30px;
 }
