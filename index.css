@@ -53,9 +53,9 @@ h1 {
     margin: 0;
     padding: 0;
     text-align: center;
-    font-size: 130px;
+    font-size: 125px;
     font-weight: 400;
-    letter-spacing: 18px;
+    letter-spacing: 15px;
     line-height: 1.1;
 }
 
@@ -128,20 +128,19 @@ button:active {
 #board {
     position: relative;
     
-    background: #0016309d;
+    background: #00142cb2;
     border-radius: 18px;
-    border: solid 3px #fff;
+    border: solid 3px white;
     overflow: hidden;
 }
 
-#menuButtons {
+.menuButtons {
     display: flex;
     gap: 80px;
-    z-index: 100;
 }
 
 .menuButton {
-    width: 300px;
+    width: 350px;
     bottom: 60px;
 }
 
@@ -174,7 +173,7 @@ button:active {
     align-items: center;
     top: 240px;
     padding: 30px;
-    background: #0016309d;
+    background: #002047be;
     border: solid 3px #0aa8f2;
     border-radius: 30px;
 }
@@ -183,7 +182,7 @@ button:active {
     display: grid;
     place-items: center;
     margin: 20px;
-    padding: 10px;
+    padding: 12px;
     width: 740px;
     font-size: 50px;
     background: #0a88e3;
@@ -199,10 +198,10 @@ button:active {
 }
 
 #rankingList li {
-    padding: 10px 0;
+    padding: 12px 0;
     margin: 8px 0;
     width: 100%;
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
     background: #013061;
     border: solid 3px #0a4b84;
