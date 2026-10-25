@@ -21,7 +21,7 @@ const boardElement = document.getElementById("board");
 
 const startButton = document.getElementById("startButton");
 const retryButton = document.getElementById("retryButton");
-const homeButton = document.getElementById("homeButton");
+const homeButton = document.querySelectorAll(".homeButton");
 const skipButton = document.getElementById("skipButton");
 const rankingSubmitArea = document.getElementById("rankingSubmission");
 
@@ -160,7 +160,9 @@ function init() {
     
     startButton.addEventListener("click", startGame);
     retryButton.addEventListener("click", startGame);
-    homeButton.addEventListener("click", returnTitle);
+    homeButton.forEach(button => {
+        button.addEventListener("click", returnTitle);
+    });
     skipButton.addEventListener("click", skipTurn);
     submitScoreButton.addEventListener("click", handleScoreSubmission);
     
@@ -274,9 +276,8 @@ function drawMolecule(x, y, c, t) {
 }
 function drawParticle(x, r, c, t) {
     let y = t * 0.1 % 1920;
-    // y = 960
-    const d = (0.999995 ** ((x - 540) ** 2)) * (0.999995 ** ((y - 960) ** 2))
-    x = x + d * Math.sign(x - 540) * 350
+    const d = (0.999993 ** ((x - 540) ** 2)) * (0.999997 ** ((y - 960) ** 2))
+    x = x + d * Math.sign(x - 540) * 400
     fillCircle(x, y, r, c)
 }
 function animateBG() {
