@@ -30,6 +30,8 @@ const submitScoreButton = document.getElementById("submitScoreButton");
 const submitStatus = document.getElementById("submitStatus");
 const rankingList = document.getElementById("rankingList");
 
+const backgroundCtx = backgroundCanvas.getContext("2d");
+
 const ELEMENTS = [
     {text: "H", color: "#448787"},
     {text: "C", color: "#328a32"},
@@ -141,12 +143,17 @@ let grid = Array.from(
 
 init();
 
+animateBG();
+
 //init
 function init() {
     highScoreElement.textContent = `${bestScore}`;
     
     gameElement.style.width = `${GAME_WIDTH}px`;
     gameElement.style.height = `${GAME_HEIGHT}px`;
+
+    backgroundCanvas.width = GAME_WIDTH;
+    backgroundCanvas.height = GAME_HEIGHT;
     
     boardElement.style.width = `${GRID_COLS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
     boardElement.style.height = `${GRID_ROWS * (GRID_SIZE + GRID_GAP) - GRID_GAP}px`;
@@ -170,8 +177,6 @@ function init() {
     
     resizeGame();
     hideLoadingScreen();
-
-    const backgroundCtx = backgroundCanvas.getContext("2d");
 }
 function resizeGame() {
     const scaleX = window.innerWidth / GAME_WIDTH;
@@ -241,6 +246,45 @@ async function skipTurn() {
     isPlaying = false;
     await addNewPieces();
     isPlaying = true;
+}
+
+//background
+function fillCircle(x, y, r, c) {
+    backgroundCtx.fillStyle = c;
+    backgroundCtx.beginPath();
+    backgroundCtx.arc(x, y, r, 0, Math.PI * 2);
+    backgroundCtx.fill();
+}
+function drawMolecule(x, y, c, t) {
+    backgroundCtx.strokeStyle = "white";
+    backgroundCtx.lineWidth = 5;
+    backgroundCtx.save();
+    backgroundCtx.translate(x, y + Math.sin(t * 0.004) * 10);
+    backgroundCtx.rotate(0.0005 * t);
+    for (let i = 0; i < 3; i++) {
+        backgroundCtx.beginPath();
+        backgroundCtx.moveTo(0, 0);
+        backgroundCtx.lineTo(0, 100);
+        backgroundCtx.stroke();
+        fillCircle(0, Math.sin((0.0005 * t + 2.09 * i) / Math.PI * 15) * 20 + 100, 20, "#76c2d8");
+        backgroundCtx.rotate(2.09);
+    }
+    fillCircle(0, 0, 40, c);
+    backgroundCtx.restore();
+}
+function animateBG() {
+    function animate(t) {
+        backgroundCtx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
+        drawMolecule(220, 250, "#3c9679", t);
+        drawMolecule(1000, 500, "#d34842", - t);
+        drawMolecule(120, 1500, "#0e7dda", t + 300);
+        drawMolecule(850, 1750, "#b86130", 600 - t);
+        fillCircle(130, -50, 300, "#ffffff15");
+        fillCircle(320, 1900, 180, "#ffffff0f");
+        fillCircle(-30, 1400, 150, "#ffffff09");
+        requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
 }
 
 //board
@@ -518,7 +562,7 @@ function clearLines() {
 //events
 function registerEventListeners() {
     document.addEventListener("pointerdown", (e) => {
-        if (!isPlaying || isGameOver) return;
+        if (!isPlaying || isGameOver || isPointerDown) return;
         const target = document.elementFromPoint(e.clientX, e.clientY);
         if (target?.classList.contains("pieces")) {
             isPointerDown = true;
