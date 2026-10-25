@@ -259,29 +259,50 @@ function drawMolecule(x, y, c, t) {
     backgroundCtx.strokeStyle = "white";
     backgroundCtx.lineWidth = 5;
     backgroundCtx.save();
-    backgroundCtx.translate(x, y + Math.sin(t * 0.004) * 10);
-    backgroundCtx.rotate(0.0005 * t);
+    backgroundCtx.translate(x, y + Math.sin(t * 0.0008) * 20);
+    backgroundCtx.rotate(0.0002 * t);
     for (let i = 0; i < 3; i++) {
         backgroundCtx.beginPath();
         backgroundCtx.moveTo(0, 0);
         backgroundCtx.lineTo(0, 100);
         backgroundCtx.stroke();
-        fillCircle(0, Math.sin((0.0005 * t + 2.09 * i) / Math.PI * 15) * 20 + 100, 20, "#76c2d8");
+        fillCircle(0, Math.sin((0.0002 * t + 2.09 * i) / Math.PI * 15) * 20 + 100, 20, "#76c2d8");
         backgroundCtx.rotate(2.09);
     }
     fillCircle(0, 0, 40, c);
     backgroundCtx.restore();
 }
+function drawParticle(x, r, c, t) {
+    let y = t * 0.1 % 1920;
+    // y = 960
+    const d = (0.999995 ** ((x - 540) ** 2)) * (0.999995 ** ((y - 960) ** 2))
+    x = x + d * Math.sign(x - 540) * 350
+    fillCircle(x, y, r, c)
+}
 function animateBG() {
     function animate(t) {
         backgroundCtx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT)
-        drawMolecule(220, 250, "#3c9679", t);
+        drawParticle(500, 10, "#276ab9", t + 4000)
+        drawParticle(400, 20, "#085dd4", t + 16000)
+        drawParticle(300, 10, "#bf6b35", t + 8000)
+        drawParticle(200, 20, "#085dd4", t)
+        drawParticle(100, 10, "#276ab9", t + 12000)
+        drawParticle(600, 10, "#276ab9", t + 1000)
+        drawParticle(700, 20, "#085dd4", t + 9000)
+        drawParticle(800, 10, "#276ab9", t + 13000)
+        drawParticle(900, 20, "#085dd4", t + 5000)
+        drawParticle(1000, 10, "#bf6b35", t + 17000)
+
+        drawMolecule(220, 280, "#3c9679", t);
         drawMolecule(1000, 500, "#d34842", - t);
-        drawMolecule(120, 1500, "#0e7dda", t + 300);
-        drawMolecule(850, 1750, "#b86130", 600 - t);
+        drawMolecule(180, 1460, "#0e7dda", t + 1800);
+        drawMolecule(850, 1750, "#b86130", 1800 - t);
+
         fillCircle(130, -50, 300, "#ffffff15");
         fillCircle(320, 1900, 180, "#ffffff0f");
         fillCircle(-30, 1400, 150, "#ffffff09");
+        fillCircle(0, 800, 80, "#ffffff25");
+        fillCircle(1050, 1000, 100, "#ffffff09");
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
