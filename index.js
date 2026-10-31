@@ -685,7 +685,7 @@ async function loadRanking() {
         rankingList.replaceChildren();
         scores.forEach((data) => {
             const item = document.createElement("li");
-            item.textContent = `${data.name} : ${data.score}`;
+            item.textContent = `${data.score}`;
             rankingList.appendChild(item);
         });
     } catch (error) {
